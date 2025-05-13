@@ -1,12 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Inspirado no Burger King</title>
     <link rel="stylesheet" href="css/style.css">
-    <title>RamBurger</title>
-  </head>
-  <body>
-    <h1>Commit inicial</h1>
-  </body>
+</head>
+<body>
+    <header class="cabecalho">
+        <div class="logo">
+            <img src="logo.png" alt="Logo" style="height: 50px;">
+        </div>
+        <div class="usuario">
+            <span class="saudacao">Oi, [Nome do Usuário]!</span>
+        </div>
+        <div class="promocoes">
+            <div class="banner-promocional">
+                Cupons & Recompensas <button>Inserir código</button>
+            </div>
+        </div>
+    </header>
+
+    <aside class="menu-lateral">
+        <div class="secao-menu mais-vendidos ativo" data-secao="mais-vendidos">
+            <span>⭐ Mais vendidos</span>
+        </div>
+        <div class="secao-menu lancamentos" data-secao="lancamentos">
+            <span>🔥 Lançamentos</span>
+        </div>
+        <div class="secao-menu especiais" data-secao="especiais">
+            <span>✨ Especiais</span>
+        </div>
+        <div class="secao-menu carne" data-secao="carne">
+            <span>🍔 Carne</span>
+        </div>
+        <div class="secao-menu frango-vegetariano" data-secao="frango-vegetariano">
+            <span>🍗 Frango e Vegetariano</span>
+        </div>
+        <div class="secao-menu king-junior" data-secao="king-junior">
+            <span>👑 King Júnior</span>
+        </div>
+        <div class="secao-menu pra-acompanhar" data-secao="pra-acompanhar">
+            <span>🍟 Pra acompanhar</span>
+        </div>
+        <div class="secao-menu sobremesa" data-secao="sobremesa">
+            <span>🍦 Sobremesa</span>
+        </div>
+        <div class="secao-menu bebida" data-secao="bebida">
+            <span>🥤 Bebida</span>
+        </div>
+    </aside>
+
+    <main class="conteudo-principal">
+        <section class="banner-principal">
+            <img src="banner-mega-stacker.jpg" alt="Mega Stacker Cheddar Empanado" style="width: 100%;">
+        </section>
+
+        <section class="lista-produtos" id="lancamentos-secao">
+            <h2>Lançamentos</h2>
+            <div class="produtos-grid">
+                <div class="produto">
+                    <img src="whopper-rodeio.jpg" alt="Whopper Rodeio">
+                    <h3>Whopper® Rodeio</h3>
+                    <span class="preco">a partir de R$ 39,90</span>
+                </div>
+                <div class="produto">
+                    <img src="whopper-barbecue-bacon.jpg" alt="Whopper Barbecue Bacon">
+                    <h3>Whopper® Barbecue Bacon</h3>
+                    <span class="preco">a partir de R$ 19,90</span>
+                </div>
+                <div class="produto">
+                    <img src="whopper-duplo.jpg" alt="Whopper Duplo">
+                    <h3>Whopper® Duplo</h3>
+                    <span class="preco">a partir de R$ 18,90</span>
+                </div>
+                <div class="produto">
+                    <img src="whopper-furioso.jpg" alt="Whopper Furioso">
+                    <h3>Whopper® Furioso</h3>
+                    <span class="preco">a partir de R$ 35,90</span>
+                </div>
+                <div class="produto">
+                    <img src="stacker-cheddar-2.jpg" alt="Mega Stacker Cheddar">
+                    <h3>Mega Stacker Cheddar</h3>
+                    <span class="preco">a partir de R$ XX,XX</span>
+                </div>
+                <div class="produto">
+                    <img src="stacker-cheddar-1.jpg" alt="Mega Stacker Cheddar">
+                    <h3>Mega Stacker Cheddar</h3>
+                    <span class="preco">a partir de R$ XX,XX</span>
+                </div>
+            </div>
+        </section>
+
+        </main>
+
+    <footer class="rodape">
+        <div class="sacola">
+            <span><img src="sacola-icon.png" alt="Sacola" style="height: 20px;"> Sua sacola</span>
+        </div>
+        <div class="pedido">
+            <span class="valor-total">R$ 00,00</span>
+            <button class="recomecar-pedido">Recomeçar pedido</button>
+        </div>
+    </footer>
+
+    <script src="js/scripts.js"></script>
+</body>
 </html>

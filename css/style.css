@@ -1,3 +1,233 @@
-h1 {
-  color: blueviolet;
+@font-face {
+  font-family: titanOne;
+  src: url(/fonts/TitanOne-Regular.ttf) format('truetype');
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  display: flex;
+}
+
+.cabecalho {
+  background-color: #ffc72c;
+  /* Cor amarela característica do BK */
+  color: #000;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.usuario {
+  text-align: right;
+}
+
+.saudacao {
+  font-weight: bold;
+}
+
+.pontuacao {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.promocoes .banner-promocional {
+  background-color: #fff;
+  color: #e47911;
+  /* Outra cor presente */
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 0.8em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.promocoes button {
+  background: none;
+  border: 1px solid #e47911;
+  color: #e47911;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-left: 10px;
+}
+
+.menu-lateral {
+  background-color: #f9f9f9;
+  width: 200px;
+  padding-top: 80px;
+  /* Para não sobrepor com o cabeçalho fixo */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.secao-menu {
+  padding: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.secao-menu:hover,
+.secao-menu.ativo {
+  background-color: #eee;
+  border-left: 5px solid #ffc72c;
+}
+
+.conteudo-principal {
+  flex-grow: 1;
+  padding: 20px;
+  padding-top: 80px;
+  /* Para não sobrepor com o cabeçalho fixo */
+}
+
+.banner-principal {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.lista-produtos h2 {
+  color: #e47911;
+  margin-bottom: 15px;
+}
+
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.produto {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding-bottom: 15px;
+  text-align: center;
+}
+
+.produto img {
+  width: 100%;
+  display: block;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+  height: auto;
+  /* Ajuste a altura conforme necessário */
+  object-fit: cover;
+  /* Para cobrir o espaço sem distorcer */
+}
+
+.produto h3 {
+  margin-top: 0;
+  font-size: 1.1em;
+  color: #333;
+  padding: 0 10px;
+}
+
+.preco {
+  color: #28a745;
+  /* Cor verde para o preço */
+  font-weight: bold;
+  display: block;
+  margin-top: 8px;
+}
+
+.rodape {
+  background-color: #343a40;
+  /* Cor escura para o rodapé */
+  color: #fff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.sacola {
+  display: flex;
+  align-items: center;
+}
+
+.sacola img {
+  margin-right: 8px;
+}
+
+.pedido .valor-total {
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.pedido button {
+  background-color: #dc3545;
+  /* Cor vermelha para ação */
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.pedido button:hover {
+  background-color: #c82333;
+}
+
+/* Adaptações para telas menores (opcional) */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  .menu-lateral {
+    width: 100%;
+    overflow-x: auto;
+    height: auto;
+    padding-top: 60px;
+    /* Ajuste para o cabeçalho menor */
+    position: fixed;
+    top: 60px;
+    z-index: 99;
+    display: flex;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .secao-menu {
+    flex-grow: 1;
+    text-align: center;
+    border-left: none !important;
+    border-bottom: 1px solid #eee;
+  }
+
+  .conteudo-principal {
+    padding-top: 120px;
+    /* Ajuste para o cabeçalho e menu fixos */
+  }
+
+  .rodape {
+    position: static;
+  }
+}
+
+h2, h3 {
+  font-family: titanOne;
+  font-weight: 100;
 }
