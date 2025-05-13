@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projeto Inspirado no Burger King</title>
+    <link rel="icon" type="image/x-icon" href="images/sanduichelindju.png">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header class="cabecalho">
         <div class="logo">
-            <img src="logo.png" alt="Logo" style="height: 50px;">
+            <img src="images/sanduichelindju.png" alt="Logo" style="height: 50px;">
         </div>
         <div class="usuario">
             <span class="saudacao">Oi, [Nome do Usuário]!</span>
@@ -22,26 +23,11 @@
     </header>
 
     <aside class="menu-lateral">
-        <div class="secao-menu mais-vendidos ativo" data-secao="mais-vendidos">
-            <span>⭐ Mais vendidos</span>
-        </div>
-        <div class="secao-menu lancamentos" data-secao="lancamentos">
+        <div class="secao-menu lancamentos ativo" data-secao="lancamentos">
             <span>🔥 Lançamentos</span>
         </div>
-        <div class="secao-menu especiais" data-secao="especiais">
-            <span>✨ Especiais</span>
-        </div>
-        <div class="secao-menu carne" data-secao="carne">
-            <span>🍔 Carne</span>
-        </div>
-        <div class="secao-menu frango-vegetariano" data-secao="frango-vegetariano">
-            <span>🍗 Frango e Vegetariano</span>
-        </div>
-        <div class="secao-menu king-junior" data-secao="king-junior">
-            <span>👑 King Júnior</span>
-        </div>
-        <div class="secao-menu pra-acompanhar" data-secao="pra-acompanhar">
-            <span>🍟 Pra acompanhar</span>
+        <div class="secao-menu acompanhamentos" data-secao="acompanhamentos">
+            <span>🍟 Acompanhamentos</span>
         </div>
         <div class="secao-menu sobremesa" data-secao="sobremesa">
             <span>🍦 Sobremesa</span>
@@ -53,54 +39,79 @@
 
     <main class="conteudo-principal">
         <section class="banner-principal">
-            <img src="banner-mega-stacker.jpg" alt="Mega Stacker Cheddar Empanado" style="width: 100%;">
+            <img src="images/sandowichcover.webp" alt="Sanduiches gostosos" style="width: 100%;">
         </section>
 
         <section class="lista-produtos" id="lancamentos-secao">
             <h2>Lançamentos</h2>
             <div class="produtos-grid">
                 <div class="produto">
-                    <img src="whopper-rodeio.jpg" alt="Whopper Rodeio">
-                    <h3>Whopper® Rodeio</h3>
+                    <img src="images/sanduichedefrango.jpg" alt="Sanduiche de Frango">
+                    <h3>Sanduiche de Frango com maionese</h3>
                     <span class="preco">a partir de R$ 39,90</span>
                 </div>
                 <div class="produto">
-                    <img src="whopper-barbecue-bacon.jpg" alt="Whopper Barbecue Bacon">
-                    <h3>Whopper® Barbecue Bacon</h3>
+                    <img src="images/sanduichedefrangogrelhado.jpg" alt="Sanduíche de frango cremoso">
+                    <h3>Sanduiche de Frango grelhado com salada</h3>
                     <span class="preco">a partir de R$ 19,90</span>
                 </div>
                 <div class="produto">
-                    <img src="whopper-duplo.jpg" alt="Whopper Duplo">
-                    <h3>Whopper® Duplo</h3>
+                    <img src="images/sanduichedepeitodeperu.jpg", alt="Sanduíche de peito de peru">
+                    <h3>Sanduíche de peito de peru</h3>
                     <span class="preco">a partir de R$ 18,90</span>
                 </div>
                 <div class="produto">
-                    <img src="whopper-furioso.jpg" alt="Whopper Furioso">
-                    <h3>Whopper® Furioso</h3>
+                    <img src="images/sanduichepastrami.jpg" alt="Sanduiche de Pastrami">
+                    <h3>Sanduiche de Pastrami apetitoso</h3>
                     <span class="preco">a partir de R$ 35,90</span>
                 </div>
                 <div class="produto">
-                    <img src="stacker-cheddar-2.jpg" alt="Mega Stacker Cheddar">
-                    <h3>Mega Stacker Cheddar</h3>
-                    <span class="preco">a partir de R$ XX,XX</span>
-                </div>
-                <div class="produto">
-                    <img src="stacker-cheddar-1.jpg" alt="Mega Stacker Cheddar">
-                    <h3>Mega Stacker Cheddar</h3>
-                    <span class="preco">a partir de R$ XX,XX</span>
+                    <img src="images/steakqueijoderretido.jpg" alt="Sanduíche de steak com queijo derretido">
+                    <h3>Sanduíche de steak com queijo derretido</h3>
+                    <span class="preco">a partir de R$ 39,90</span>
                 </div>
             </div>
         </section>
 
-        </main>
+        <section class="lista-produtos" id="acompanhamentos-secao">
+            <h2>Acompanhamentos</h2>
+            <div class="produtos-grid">
+                <div class="produto">
+                    <img src="images/batatafrita.jpg" alt="Batata frita">
+                    <h3>Batata frita crocante</h3>
+                    <span class="preco">R$ 9,90</span>
+                </div>
+                <div class="produto">
+                    <img src="images/batataparafuso.jpeg" alt="Batata frita">
+                    <h3>Batata frita parafuso Crinkle</h3>
+                    <span class="preco">R$ 9,90</span>
+                </div>
+                <div class="produto">
+                    <img src="images/batatascarinhas.jpeg" alt="Batata frita">
+                    <h3>Batata frita de carinha</h3>
+                    <span class="preco">R$ 9,90</span>
+                </div>
+                <div class="produto">
+                    <img src="images/nuggets.avif" alt="Batata frita">
+                    <h3>Nuggets crocante</h3>
+                    <span class="preco">R$ 9,90</span>
+                </div>
+                <div class="produto">
+                    <img src="images/salada.webp" alt="Batata frita">
+                    <h3>Salada fresca</h3>
+                    <span class="preco">R$ 9,90</span>
+                </div>
+            </div>
+        </section>
+      </main>
 
     <footer class="rodape">
         <div class="sacola">
-            <span><img src="sacola-icon.png" alt="Sacola" style="height: 20px;"> Sua sacola</span>
+            <span class="pagamento"><img src="images/carrinhodecomprasbranco.png" alt="Sacola" style="height: 20px;"> Sua sacola</span>
         </div>
         <div class="pedido">
             <span class="valor-total">R$ 00,00</span>
-            <button class="recomecar-pedido">Recomeçar pedido</button>
+            <button class="recomecar-pedido">Continuar para pagamento</button>
         </div>
     </footer>
 
