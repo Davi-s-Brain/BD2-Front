@@ -82,8 +82,10 @@ body {
 
 .secao-menu:hover,
 .secao-menu.ativo {
-  background-color: #eee;
-  border-left: 5px solid #ffc72c;
+  background-color: #2a8500;
+  transition: 0.1s;
+  border-radius: 3%;
+  color: white;
 }
 
 .conteudo-principal {
