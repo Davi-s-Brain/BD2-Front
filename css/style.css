@@ -3,8 +3,11 @@
   src: url(/fonts/TitanOne-Regular.ttf) format('truetype');
 }
 
-body {
+body, button {
   font-family: sans-serif;
+}
+
+body {
   margin: 0 0 60px 0;
   padding: 0;
   background-color: #f0f0f0;
@@ -72,7 +75,7 @@ body {
 
 .menu-lateral {
   background-color: #f9f9f9;
-  width: 200px;
+  width: 600px;
   padding-top: 80px;
   /* Para não sobrepor com o cabeçalho fixo */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
@@ -99,7 +102,6 @@ body {
   padding: 20px;
   padding-top: 80px;
   /* Para não sobrepor com o cabeçalho fixo */
-  max-width: calc(100% - 300px); /* 200px = largura do menu lateral */
   overflow-x: hidden;
 }
 
@@ -167,6 +169,117 @@ body {
   margin-top: 8px;
 }
 
+.fechar-sacola {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  float: right;
+  color: #a00;
+  cursor: pointer;
+}
+
+.sacola-expandida {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 93%;
+  height: 100%;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #fef3e2;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin: 1rem;
+}
+
+.sacola-expandida h2 {
+  font-size: 1.5rem;
+  color: #5a2c02;
+  margin-bottom: 1rem;
+}
+
+.item-sacola {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  background-color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.imagem-produto {
+  width: 150px;
+  height: auto;
+  border-radius: 8px;
+  margin-right: 1rem;
+}
+
+.info-produto {
+  flex-grow: 1;
+}
+
+.info-produto h3 {
+  font-size: 1rem;
+  color: #5a2c02;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detalhes {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.remover-item {
+  background-color: #fff0ec;
+  border: 1px solid #c43c1e;
+  color: #c43c1e;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-remover {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #c43c1e;
+  cursor: pointer;
+}
+
+.quantidade {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  padding: 0.3rem 0.6rem;
+  border-radius: 16px;
+}
+
+.quantidade button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+
 .rodape {
   background-color: #343a40;
   /* Cor escura para o rodapé */
@@ -196,9 +309,8 @@ body {
   margin-right: 15px;
 }
 
-.pedido button {
+.rodape button {
   background-color: #dc3545;
-  /* Cor vermelha para ação */
   color: #fff;
   border: none;
   padding: 10px 15px;
@@ -208,8 +320,66 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.pedido button:hover {
+.rodape button:hover {
   background-color: #c82333;
+}
+
+.conteudo-tela-pagamento {
+  width: 100%;
+}
+
+.tela-pagamento {
+  background-color: #fff;
+  padding: 20px 40px;
+  margin: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #ccc;
+}
+
+.tela-pagamento h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.metodo-pagamento label {
+  display: block;
+  margin: 8px 0;
+}
+
+#troco {
+  padding: 5px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.tela-pagamento #botao-voltar {
+  background-color: #ffc72c;
+  border: 1px solid #e47911;
+  border-radius: 10px;
+  padding: 10px 15px;
+  width: 100px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tela-pagamento #botao-confirma-pag {
+  background-color: #12b420;
+  border: 1px solid #005000;
+  border-radius: 10px;
+  padding: 10px 15px;
+  width: 200px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tela-confirmacao button{
+  background-color: #ffc72c;
+  border: 1px solid #e47911;
+  border-radius: 10px;
+  padding: 10px 15px;
+  width: 200px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /* Adaptações para telas menores (opcional) */

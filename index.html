@@ -170,11 +170,105 @@
                 </div>
             </div>
         </section>
+        
+        <section class="tela-pagamento" style="display: none;">
+          <button id="botao-voltar">Voltar</button>
+          <h2>Pagamento</h2>
+
+          <div class="resumo-pedido">
+              <p><strong>Resumo do Pedido:</strong></p>
+              <ul id="resumo-itens">
+                  <!-- Exemplo de item -->
+                  <li>1x Sanduíche de Frango - R$ 39,90</li>
+              </ul>
+              <p><strong>Total:</strong> <span id="total-pagar">R$ 00,00</span></p>
+          </div>
+
+          <div class="metodo-pagamento">
+              <p><strong>Escolha o método de pagamento:</strong></p>
+              <label><input type="radio" name="pagamento" value="cartao"> Crédito</label><br>
+              <label><input type="radio" name="pagamento" value="cartao"> Débito</label><br>
+              <label><input type="radio" name="pagamento" value="dinheiro"> Dinheiro</label><br>
+              <label><input type="radio" name="pagamento" value="pix"> Pix</label><br>
+
+              <div id="campo-troco" style="display: none; margin-top: 10px;">
+                  <label>Troco para quanto?</label>
+                  <input type="number" id="troco" placeholder="Ex: 100.00">
+              </div>
+
+              <div id="campo-pix" style="display: none; margin-top: 10px;">
+                  <label>Escaneie o QR Code para pagar:</label>
+                  <img src="images/pix.jpg">
+              </div>
+          </div>
+          
+          <button id="botao-confirma-pag" onclick="finalizarPagamento()">Confirmar Pagamento</button>
+        </section>
+
+        <section class="tela-confirmacao" style="display: none;">
+            <h2>Pedido Confirmado!</h2>
+            <p>Seu pagamento foi confirmado com sucesso.</p>
+            <button onclick="recomecarPedido()">Fazer outro pedido</button>
+        </section>
+
+        <section class="sacola-expandida" id="sacola-expandida" style="display: none;">
+          <button id="fecharSacola" class="fechar-sacola">Fechar ✕</button>
+          <h2>Sua sacola</h2>
+
+          <div class="item-sacola">
+            <img src="images/sanduichedefrango.jpg" alt="Combo" class="imagem-produto">
+
+            <div class="info-produto">
+              <h3>Nome do produto</h3>
+              <ul class="detalhes">
+                <li>Lanche</li>
+                <li>Batata Frita Média</li>
+                <li>Free Refil</li>
+              </ul>
+              <button class="remover-item">Remover item</button>
+            </div>
+
+            <div class="acoes">
+              <h3><span class="preco">R$15,90</span></h3>
+              <div class="quantidade">
+                <button class="menos">-</button>
+                <span>1</span>
+                <button class="mais">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Outro item -->
+          <div class="item-sacola">
+            <img src="images/batatafrita.jpg" alt="Batata Frita" class="imagem-produto">
+
+            <div class="info-produto">
+              <h3>Batata Frita</h3>
+              <ul class="detalhes">
+                <li>Batata Frita Média</li>
+              </ul>
+              <button class="remover-item">Remover item</button>
+            </div>
+
+            <div class="acoes">
+              <h3><span class="preco">R$15,90</span></h3>
+              <div class="quantidade">
+                <button class="menos">-</button>
+                <span>1</span>
+                <button class="mais">+</button>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
+
 
     <footer class="rodape">
         <div class="sacola">
-            <span class="pagamento"><img src="images/carrinhodecomprasbranco.png" alt="Sacola" style="height: 20px;"> Sua sacola</span>
+            <span class="pagamento">
+              <img src="images/carrinhodecomprasbranco.png" alt="Sacola" style="height: 20px;"> 
+              <button id="abrirSacola">Ver sua sacola</button>
+            </span>
         </div>
         <div class="pedido">
             <span class="valor-total">R$ 00,00</span>
@@ -182,6 +276,6 @@
         </div>
     </footer>
 
-    <script src="js/scripts.js"></script>
+    <script src="js/scripts.js" defer></script>
 </body>
 </html>
