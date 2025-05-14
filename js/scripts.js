@@ -17,9 +17,24 @@ document.addEventListener("DOMContentLoaded", function () {
         secaoAlvo.style.display = "block";
       } else if (secaoId === "lancamentos") {
         document.getElementById("lancamentos-secao").style.display = "block";
+      } else if (secaoId === "acompanhamentos") {
+        document.getElementById("acompanhamentos-secao").style.display =
+          "block";
+      } else if (secaoId === "sobremesa") {
+        document.getElementById("sobremesa-secao").style.display = "block";
+      } else if (secaoId === "bebida") {
+        document.getElementById("bebidas-secao").style.display = "block";
       }
     });
   });
+
+  // Inicializa exibindo apenas a seção "lancamentos"
+  const todasSecoesProdutos = document.querySelectorAll(".lista-produtos");
+  todasSecoesProdutos.forEach((sec) => (sec.style.display = "none"));
+  const secaoLancamentos = document.getElementById("lancamentos-secao");
+  if (secaoLancamentos) {
+    secaoLancamentos.style.display = "block";
+  }
 
   function atualizarPontos(novosPontos) {
     const elementoPontos = document.getElementById("pontos");
