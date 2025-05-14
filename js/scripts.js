@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const secoesMenu = menuLateral.querySelectorAll(".secao-menu");
 
   secoesMenu.forEach((secao) => {
-    secao.addEventListener("click", function () {
+    secao.addEventListener("click", function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
       secoesMenu.forEach((s) => s.classList.remove("ativo"));
       this.classList.add("ativo");
 
@@ -12,13 +14,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const todasSecoesProdutos = document.querySelectorAll(".lista-produtos");
       todasSecoesProdutos.forEach((sec) => (sec.style.display = "none"));
+
       const secaoAlvo = document.getElementById(`${secaoId}-secao`);
       if (secaoAlvo) {
         secaoAlvo.style.display = "block";
       } else if (secaoId === "lancamentos") {
         document.getElementById("lancamentos-secao").style.display = "block";
       } else if (secaoId === "acompanhamentos") {
-        document.getElementById("acompanhamentos-secao").style.display = "block";
+        document.getElementById("acompanhamentos-secao").style.display =
+          "block";
       } else if (secaoId === "sobremesa") {
         document.getElementById("sobremesa-secao").style.display = "block";
       } else if (secaoId === "bebida") {
@@ -65,7 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
     input.addEventListener("change", () => {
       const campoTroco = document.getElementById("campo-troco");
       if (campoTroco) {
-        campoTroco.style.display = input.value === "dinheiro" ? "block" : "none";
+        campoTroco.style.display =
+          input.value === "dinheiro" ? "block" : "none";
       }
     });
   });
@@ -106,9 +111,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Marcar "lancamentos" como ativo
-    document.querySelectorAll(".secao-menu").forEach((s) =>
-      s.classList.remove("ativo")
-    );
+    document
+      .querySelectorAll(".secao-menu")
+      .forEach((s) => s.classList.remove("ativo"));
     const abaLancamentos = document.querySelector(
       '.secao-menu[data-secao="lancamentos"]'
     );
@@ -151,7 +156,9 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelector(".banner-principal").style.display = "none";
       document.querySelector(".menu-lateral").style.display = "none";
       document.querySelector(".rodape").style.display = "none";
-      document.querySelectorAll(".lista-produtos").forEach(sec => sec.style.display = "none");
+      document
+        .querySelectorAll(".lista-produtos")
+        .forEach((sec) => (sec.style.display = "none"));
     });
   }
 

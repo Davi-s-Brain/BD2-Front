@@ -1,0 +1,76 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #ffd972;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-family: titanOne;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #2a8500;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.login-container button:hover {
+  background-color: #267800;
+}
+
+.login-container a {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: #2a8500;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.login-container a:hover {
+  text-decoration: underline;
+}
+
+#background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Garanta que a tela de login apareça acima do canvas */
+.login-container {
+  position: relative;
+  z-index: 1;
+}
