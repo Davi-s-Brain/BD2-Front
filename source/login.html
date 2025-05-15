@@ -10,13 +10,17 @@
     <canvas id="background"></canvas>
     <div class="login-container">
       <h2>Login</h2>
-      <form action="index.html" method="post">
-        <input type="text" name="username" placeholder="Usuário" required />
-        <input type="password" name="password" placeholder="Senha" required />
-        <button type="submit">Entrar</button>
-      </form>
+      <input type="text" name="username" placeholder="Usuário" required />
+      <input type="password" name="password" placeholder="Senha" required />
+      <button type="button" onclick="redirectToIndex()">Entrar</button>
       <a href="#">Cadastre-se</a>
     </div>
+
+    <script>
+      function redirectToIndex() {
+        window.location.href = "index.html";
+      }
+    </script>
     <script src="../js/login.js"></script>
   </body>
 </html>
