@@ -21,6 +21,13 @@ body {
   margin-bottom: 1.5rem;
   font-family: titanOne;
 }
+#messageLogin, #messageRegister {
+  color: red;
+  margin-top: 10px;
+  text-align: center;       /* Centraliza o texto */
+  width: 100%;              /* Ocupa toda a largura do container */
+  font-weight: bold;
+}
 
 .login-container input[type="text"],
 .login-container input[type="password"] {

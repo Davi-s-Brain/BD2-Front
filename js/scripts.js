@@ -1,7 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
   const menuLateral = document.querySelector(".menu-lateral");
   const secoesMenu = menuLateral.querySelectorAll(".secao-menu");
-
+  const username = localStorage.getItem('username');
+  if (username) {
+    const saudacao = document.getElementById('saudacao');
+    if (saudacao) {
+      saudacao.textContent = `Oi, ${username}!`;
+    }
+  }
   secoesMenu.forEach((secao) => {
     secao.addEventListener("click", function (evt) {
       evt.preventDefault();
@@ -179,4 +185,5 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
 });

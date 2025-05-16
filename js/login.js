@@ -57,3 +57,81 @@ window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const loginButton = document.getElementById("loginBtn");
+  const errorMsg = document.getElementById("error-msg");
+
+  loginButton.addEventListener("click", async () => {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    errorMsg.textContent = ""; // Limpa erro anterior
+
+    try {
+      const response = await fetch("http://localhost:8000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        localStorage.setItem("username", username);
+        window.location.href = "index.html"; // Redireciona ao sucesso
+      } else if (response.status === 429) {
+        errorMsg.textContent = "Muitas tentativas. Tente novamente mais tarde.";
+      } else {
+        errorMsg.textContent = "Não foi possível autenticar. Verifique suas credenciais.";
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      errorMsg.textContent = "Erro de conexão. Tente novamente mais tarde.";
+    }
+  });
+});
+async function register() {
+  const username = document.querySelector('input[name="username"]').value;
+  const password = document.querySelector('input[name="password"]').value;
+  const messageDiv = document.getElementById('messageRegister') || createMessageDiv('register');
+
+  if (!username || !password) {
+    messageDiv.textContent = "Por favor, preencha usuário e senha para cadastro.";
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:8000/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.status === 200) {
+    localStorage.setItem('username', username);
+    window.location.href = "index.html";
+    } else if (response.status === 400) {
+      messageDiv.textContent = "Usuário já existe, tente outro.";
+    } else if (response.status === 429) {
+      messageDiv.textContent = "Muitas tentativas, espere um momento.";
+    } else {
+      messageDiv.textContent = "Erro ao cadastrar, tente novamente.";
+    }
+  } catch (error) {
+    messageDiv.textContent = "Erro na conexão, tente novamente.";
+  }
+}
+
+// Função para criar a div de mensagem se não existir ainda
+function createMessageDiv(type) {
+  const container = document.querySelector('.login-container');
+  const div = document.createElement('div');
+  div.id = type === 'register' ? 'messageRegister' : 'messageLogin';
+  div.style.color = 'red';
+  div.style.marginTop = '10px';
+  container.appendChild(div);
+  return div;
+}
+
+// Adiciona listener no botão
+document.getElementById('registerBtn').addEventListener('click', register);

@@ -9,18 +9,15 @@
   <body>
     <canvas id="background"></canvas>
     <div class="login-container">
-      <h2>Login</h2>
-      <input type="text" name="username" placeholder="Usuário" required />
-      <input type="password" name="password" placeholder="Senha" required />
-      <button type="button" onclick="redirectToIndex()">Entrar</button>
-      <a href="#">Cadastre-se</a>
+      <h2 id = "login">Login</h2>
+      <input type="text" id="username" name="username" placeholder="Usuário" required />
+      <input type="password" id="password" name="password" placeholder="Senha" required />
+      <button id="loginBtn" type="button">Entrar</button>
+      <div id="error-msg" style="color: red; margin-top: 10px;"></div>
+      <a id = "registerBtn">Cadastre-se</a>
     </div>
 
-    <script>
-      function redirectToIndex() {
-        window.location.href = "index.html";
-      }
-    </script>
     <script src="../js/login.js"></script>
   </body>
 </html>
+
