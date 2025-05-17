@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.status === 200) {
         const data = await response.json();
+        localStorage.setItem('token', data.access_token);
         localStorage.setItem("username", username);
         window.location.href = "index.html"; // Redireciona ao sucesso
       } else if (response.status === 429) {
