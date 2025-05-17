@@ -110,6 +110,7 @@ async function register() {
 
     if (response.status === 200) {
     localStorage.setItem('username', username);
+    localStorage.setItem('token', data.token)
     window.location.href = "index.html";
     } else if (response.status === 400) {
       messageDiv.textContent = "Usuário já existe, tente outro.";

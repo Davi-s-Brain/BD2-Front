@@ -1,3 +1,26 @@
+async function validarToken() {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const res = await fetch("http://localhost:8000/auth/me", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (!res.ok) {
+    window.location.href = "login.html";
+  }
+  localStorage.removeItem("token");
+
+}
+
+validarToken();
+
 document.addEventListener("DOMContentLoaded", () => {
   const botoesMenu = document.querySelectorAll(".menu-item");
   const secoes = document.querySelectorAll(".secao-conteudo");
