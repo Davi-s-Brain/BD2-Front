@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const quantidade = parseInt(quantidadeInput.value);
 
     const subtotal = preco * quantidade;
+    total += subtotal
 
 // Crie o <li> atribuindo todos os dados que vai precisar depois:
     const item = document.createElement("li");
