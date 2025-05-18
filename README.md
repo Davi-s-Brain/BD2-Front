@@ -69,11 +69,14 @@ Este é um projeto front-end desenvolvido com HTML, CSS e JavaScript, simulando 
 - Este é um projeto puramente front-end, sem persistência de dados
 
 ## 👥 Autores
-- [Seu Nome]
-- [Nome dos Colaboradores]
+- Catarina Macedo Scabelli
+- Davi Batista de Souza - 14565900
+- Geovanny Luan Piedade - 14573909
+- Rafaella Scarel Caminaga - 14108228
+- Sarah Portella Forte -  8518075
 
 ## 📄 Licença
-Este projeto está sob a licença [sua licença] - veja o arquivo LICENSE.md para detalhes.
+Este projeto está sob a licença - veja o arquivo LICENSE.md para detalhes.
 
 ---
 
