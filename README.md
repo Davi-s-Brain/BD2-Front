@@ -59,7 +59,7 @@ BD2-Front/
 
 1. **Clone o repositório**
    ```bash
-   git clone [url-do-repositorio]
+   git clone https://github.com/Davi-s-Brain/BD2-Front.git
    ```
 
 2. **Navegue até a pasta do projeto**
