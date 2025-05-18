@@ -28,7 +28,28 @@ Este é um projeto front-end desenvolvido com HTML, CSS e JavaScript, simulando 
 ### Tela do Funcionário (funcionario.html)
 - Gerenciamento de pedidos
 - Interface administrativa
-
+## 📁 Estrutura do Projeto
+BD2-Front/
+```
+├── css/
+│ ├── index.css
+│ ├── login.css
+│ └── funcionario.css
+├── fonts/
+│ └── … (arquivos de fontes)
+├── images/
+│ └── … (arquivos de imagem)
+├── js/
+│ ├── index.js
+│ ├── login.js
+│ └── funcionario.js
+├── source/
+│ ├── index.html
+│ ├── login.html
+│ └── funcionario.html
+├── LICENSE
+└── README.md
+```
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
