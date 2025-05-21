@@ -11,6 +11,7 @@
   <div class="menu-lateral">
     <div class="menu-item ativo" data-secao="registrar">Registrar Pedido</div>
     <div class="menu-item" data-secao="estoque">Ver Estoque</div>
+    <div class="menu-item" data-secao="consultar">Consultar Pedidos</div>
     <div class="menu-item" data-secao="sair">Sair</div>
   </div>
 
@@ -42,7 +43,7 @@
       <button id="finalizar">Finalizar Pedido</button>
     </section>
 
-    <section id="estoque-secao" class="secao-conteudo" style="display: none">
+    <section id="estoque-secao" class="secao-conteudo" style="display: none;">
       <h2>Gerenciamento de Estoque</h2>
       <table class="tabela-estoque">
         <thead>
@@ -61,6 +62,24 @@
 
     <section id="sair-secao" class="secao-conteudo" style="display: none;">
       <p>Você saiu com sucesso.</p>
+    </section>
+
+    <section id="consultar-secao" class="secao-conteudo" style="display: none;">
+      <h2>Consultar Pedidos</h2>
+      <div class="tabela-wrapper">
+        <table class="tabela-pedidos">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Produto</th>
+              <th>Quantidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- JS insere as linhas aqui -->
+          </tbody>
+        </table>
+      </div>
     </section>
   </div>
 

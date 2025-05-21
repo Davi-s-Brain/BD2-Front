@@ -1,6 +1,6 @@
+// Valida token e redireciona se inválido
 async function validarToken() {
   const token = localStorage.getItem("token");
-
   if (!token) {
     window.location.href = "login.html";
     return;
@@ -14,6 +14,7 @@ async function validarToken() {
 
   if (!res.ok) {
     window.location.href = "login.html";
+    return;
   }
   localStorage.removeItem("token");
 
@@ -22,259 +23,213 @@ async function validarToken() {
 validarToken();
 
 document.addEventListener("DOMContentLoaded", () => {
-  const botoesMenu = document.querySelectorAll(".menu-item");
-  const secoes = document.querySelectorAll(".secao-conteudo");
+  // Carrega lista de produtos no select ao iniciar
+  carregarProdutos();
 
-  // Função de controle das seções do menu lateral
-  botoesMenu.forEach(botao => {
-    botao.addEventListener("click", () => {
-      // Alterna a aba ativa
-      botoesMenu.forEach(b => b.classList.remove("ativo"));
-      botao.classList.add("ativo");
+  const menuItems = document.querySelectorAll(".menu-item");
+  const secoes    = document.querySelectorAll(".secao-conteudo");
 
-      // Exibe apenas a seção correspondente
-      const secaoId = botao.getAttribute("data-secao");
-      secoes.forEach(sec => {
-        sec.style.display = sec.id === `${secaoId}-secao` ? "block" : "none";
+  // Elementos do pedido
+  const produtoSelect = document.getElementById("produto");
+  const quantidadeInput = document.getElementById("quantidade");
+  const listaPedido   = document.getElementById("lista-pedido");
+  const totalSpan     = document.getElementById("total");
+  const botaoAdicionar = document.getElementById("adicionar");
+  let total = 0;
+
+  // Gerencia troca de abas
+  menuItems.forEach(item => {
+    item.addEventListener("click", () => {
+      // ativa item
+      menuItems.forEach(i => i.classList.remove("ativo"));
+      item.classList.add("ativo");
+      // exibe seção
+      const sec = item.getAttribute("data-secao");
+      secoes.forEach(s => {
+        s.style.display = (s.id === `${sec}-secao`) ? "block" : "none";
       });
+      // chama ações específicas
+      if (sec === "estoque") {
+        carregarEstoque();
+      } else if (sec === "consultar") {
+        fetchOrders();
+      }
     });
   });
+  // abre aba inicial
+  menuItems[0].click();
 
-  // Função que atualiza pedidos e o valor de cada item
-    const produtoSelect = document.getElementById("produto");
-    const quantidadeInput = document.getElementById("quantidade");
-    const listaPedido = document.getElementById("lista-pedido");
-    const totalSpan = document.getElementById("total");
-    const botaoAdicionar = document.getElementById("adicionar");
-
-    let total = 0;
-
-    botaoAdicionar.addEventListener("click", () => {
-    const produto = produtoSelect.options[produtoSelect.selectedIndex];
-    const nome = produto.text;
-    const preco = parseFloat(produto.value); // Agora o value é o preço!
-    const quantidade = parseInt(quantidadeInput.value);
-
-    const subtotal = preco * quantidade;
-    total += subtotal
-
-// Crie o <li> atribuindo todos os dados que vai precisar depois:
-    const item = document.createElement("li");
-
-    item.dataset.produto = nome;
-    item.dataset.quantidade = quantidade;
-    item.dataset.valor = preco; // Valor unitário do produto
-    item.textContent = `${nome} x${quantidade} — R$${preco}`;
-    listaPedido.appendChild(item);
-
-
+  // Adiciona item à lista de pedido
+  botaoAdicionar.addEventListener("click", () => {
+    const opc = produtoSelect.options[produtoSelect.selectedIndex];
+    const nome  = opc.text;
+    const preco = parseFloat(opc.value);
+    const qtd   = parseInt(quantidadeInput.value, 10);
+    if (isNaN(preco) || qtd <= 0) return;
+    const sub = preco * qtd;
+    total += sub;
+    const li = document.createElement("li");
+    li.dataset.produto   = nome;
+    li.dataset.quantidade = qtd;
+    li.dataset.valor     = preco;
+    li.textContent = `${nome} x${qtd} — R$${preco.toFixed(2)}`;
+    listaPedido.appendChild(li);
     totalSpan.textContent = total.toFixed(2);
     quantidadeInput.value = 1;
-    });
-
-    // Botão finalizar (pode ser expandido para salvar pedido ou limpar)
-    document.getElementById("finalizar").addEventListener("click", () => {
-    if (total === 0) {
-        alert("Nenhum item adicionado.");
-        return;
-    }
-    alert("Pedido finalizado com sucesso!");
-    listaPedido.innerHTML = "";
-    total = 0;
-    totalSpan.textContent = "0.00";
-    });
-
-    // Função que adiciona ou remove itens do estoque -> atualiza qtd
-    const botoesAumentar = document.querySelectorAll(".btn-adicionar");
-    const botoesDiminuir = document.querySelectorAll(".btn-remover");
-
-    botoesAumentar.forEach(botao => {
-        botao.addEventListener("click", () => {
-        const linha = botao.closest("tr");
-        const campoQtd = linha.querySelector(".quantidade");
-        let valor = parseInt(campoQtd.textContent, 10);
-        campoQtd.textContent = valor + 1;
-        });
-    });
-
-    botoesDiminuir.forEach(botao => {
-        botao.addEventListener("click", () => {
-        const linha = botao.closest("tr");
-        const campoQtd = linha.querySelector(".quantidade");
-        let valor = parseInt(campoQtd.textContent, 10);
-        if (valor > 0) {
-            campoQtd.textContent = valor - 1;
-        }
-        });
-    });
-
-// Lógica de troca de seções no menu
-document.querySelectorAll(".menu-item").forEach(item => {
-  item.addEventListener("click", () => {
-    document.querySelectorAll(".secao-conteudo").forEach(secao => secao.style.display = "none");
-    const secao = item.getAttribute("data-secao");
-    document.getElementById(`${secao}-secao`).style.display = "block";
-
-    if (secao === "estoque") carregarEstoque();
-  });
-});
-
-async function carregarEstoque() {
-  const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:8000/integration/estoque", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 
-  const tbody = document.querySelector(".tabela-estoque tbody");
-
-  if (res.ok) {
-    const data = await res.json();
-    tbody.innerHTML = ""; // limpa antes de preencher
-
-    data.forEach((item) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${item.name}</td>
-        <td>${item.description}</td>
-        <td class="quantidade">${item.quantity}</td>
-        <td>
-          <button class="btn-adicionar" data-produto="${item.name}">+</button>
-          <button class="btn-remover" data-produto="${item.name}">-</button>
-        </td>
-      `;
-      tbody.appendChild(row);
-    });
-
-    // Adiciona event listeners nos botões após preencher
-    document.querySelectorAll(".btn-adicionar").forEach((btn) => {
-      btn.addEventListener("click", () => alterarEstoque(btn.dataset.produto, "adicionar", 1));
-    });
-
-    document.querySelectorAll(".btn-remover").forEach((btn) => {
-      btn.addEventListener("click", () => alterarEstoque(btn.dataset.produto, "remover", 1));
-    });
-  } else {
-    tbody.innerHTML = `<tr><td colspan="4">Erro ao carregar estoque.</td></tr>`;
-  }
-}
-async function alterarEstoque(produto, acao, quantity) {
-
-  const response = await fetch(
-    `http://localhost:8000/integration/estoque/${encodeURIComponent(produto)}/alterar?acao=${acao}&quantity=${quantity}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (response.ok) {
-    await carregarEstoque(); // Atualiza a tabela com os dados atualizados
-  } else {
-    const error = await response.json();
-    alert(`Erro: ${error.detail || "Falha ao alterar estoque"}`);
-  }
-}
-document.getElementById("finalizar").addEventListener("click", async () => {
-  const nome = document.getElementById("nome-cliente").value.trim();
-  const id = parseInt(document.getElementById("comanda-cliente").value);
-  const token = localStorage.getItem("token");
-  const lista = document.querySelectorAll("#lista-pedido li");
-  const mensagem = document.getElementById("mensagem-pedido") || criarMensagem();
-
-  if (!nome || isNaN(id) || lista.length === 0) {
-    mensagem.textContent = "Preencha os dados corretamente antes de finalizar o pedido.";
-    mensagem.style.color = "red";
-    return;
-  }
-
-  let sucesso = true;
-
-  for (const item of lista) {
-    const produto = item.dataset.produto;
-    const quantidade = parseInt(item.dataset.quantidade);
-
-    const res = await fetch("http://localhost:8000/integration/order/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        name: nome,
-        id: id,
-        product: produto,
-        quantity: quantidade,
-        value : value
-      }),
-    });
-
-    if (!res.ok) {
-      sucesso = false;
-      const data = await res.json();
-      mensagem.textContent = `Erro ao registrar item: ${produto} (${data.detail || res.status})`;
+  // Finaliza pedido
+  document.getElementById("finalizar").addEventListener("click", async () => {
+    const nomeCliente = document.getElementById("nome-cliente").value.trim();
+    const comanda     = parseInt(document.getElementById("comanda-cliente").value, 10);
+    const token       = localStorage.getItem("token");
+    const itens       = document.querySelectorAll("#lista-pedido li");
+    const mensagem    = document.getElementById("mensagem-pedido") || criarMensagem();
+    if (!nomeCliente || isNaN(comanda) || itens.length === 0) {
+      mensagem.textContent = "Preencha corretamente antes de finalizar o pedido.";
       mensagem.style.color = "red";
-      break;
+      return;
     }
-  }
+    let sucesso = true;
+    for (const li of itens) {
+      const res = await fetch("http://localhost:8000/integration/order/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name:     nomeCliente,
+          id:       comanda,
+          product:  li.dataset.produto,
+          quantity: parseInt(li.dataset.quantidade, 10),
+          value:    parseFloat(li.dataset.valor)
+        })
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        mensagem.textContent = `Erro ao registrar ${li.dataset.produto}: ${data.detail || res.status}`;
+        mensagem.style.color = "red";
+        sucesso = false;
+        break;
+      }
+    }
+    if (sucesso) {
+      mensagem.textContent = "Pedido finalizado com sucesso!";
+      mensagem.style.color = "green";
+      listaPedido.innerHTML = "";
+      total = 0;
+      totalSpan.textContent = "0.00";
+    }
+  });
 
-  if (sucesso) {
-    mensagem.textContent = "Pedido finalizado com sucesso!";
-    mensagem.style.color = "green";
-    document.getElementById("lista-pedido").innerHTML = "";
-    document.getElementById("total").textContent = "0.00";
-  }
-});
-async function carregarProdutos() {
-  const select = document.getElementById("produto");
+  async function fetchOrders() {
   const token = localStorage.getItem("token");
-
   try {
-    const res = await fetch("http://localhost:8000/integration/estoque", {
+    const res = await fetch("http://localhost:8000/integration/order/all", {
+      method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
-      },
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
     });
-
-    if (!res.ok) {
-      throw new Error("Erro ao carregar produtos");
-    }
-
-    const produtos = await res.json();
-    select.innerHTML = ""; // limpa antes de preencher
-
-    produtos.forEach(produto => {
-      const option = document.createElement("option");
-      option.value = produto.value; // Aqui, value = valor/preço recebido do backend
-      option.textContent = produto.name;
-      option.setAttribute("data-preco", produto.value); // (opcional, para manter compatibilidade)
-      select.appendChild(option);
+    if (!res.ok) throw new Error("Falha ao buscar pedidos");
+    const orders = await res.json();
+    const tbody  = document.querySelector("#consultar-secao tbody");
+    tbody.innerHTML = "";
+    orders.forEach(o => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${o[0]}</td>
+        <td>${o[1]}</td>
+        <td>${o[2]}</td>
+      `;
+      tbody.appendChild(tr);
     });
-
   } catch (err) {
     console.error(err);
-    const option = document.createElement("option");
-    option.value = "";
-    option.textContent = "Erro ao carregar produtos";
-    select.appendChild(option);
+    document.querySelector("#consultar-secao tbody").innerHTML =
+      `<tr><td colspan="3">Erro ao carregar pedidos</td></tr>`;
   }
 }
 
-// Chame essa função quando a página carregar
-window.addEventListener("DOMContentLoaded", carregarProdutos);
+  // Carrega dados de estoque
+  async function carregarEstoque() {
+    const token = localStorage.getItem("token");
+    const res = await fetch("http://localhost:8000/integration/estoque", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const tbody = document.querySelector(".tabela-estoque tbody");
+    if (res.ok) {
+      const data = await res.json();
+      tbody.innerHTML = "";
+      data.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.description}</td>
+          <td class="quantidade">${item.quantity}</td>
+          <td>
+            <button class="btn-adicionar" data-produto="${item.name}">+</button>
+            <button class="btn-remover"  data-produto="${item.name}">-</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      // Eventos de alteração
+      tbody.querySelectorAll(".btn-adicionar").forEach(btn =>
+        btn.addEventListener("click", () => alterarEstoque(btn.dataset.produto, "adicionar", 1))
+      );
+      tbody.querySelectorAll(".btn-remover").forEach(btn =>
+        btn.addEventListener("click", () => alterarEstoque(btn.dataset.produto, "remover", 1))
+      );
+    } else {
+      tbody.innerHTML = `<tr><td colspan="4">Erro ao carregar estoque.</td></tr>`;
+    }
+  }
 
-function criarMensagem() {
-  const p = document.createElement("p");
-  p.id = "mensagem-pedido";
-  p.style.marginTop = "10px";
-  document.getElementById("registrar-secao").appendChild(p);
-  return p;
-}
+  // Envia alteração de estoque
+  async function alterarEstoque(produto, acao, quantity) {
+    const res = await fetch(
+      `http://localhost:8000/integration/estoque/${encodeURIComponent(produto)}/alterar?acao=${acao}&quantity=${quantity}`,
+      { method: "POST" }
+    );
+    if (res.ok) {
+      carregarEstoque();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      alert(`Erro: ${err.detail || "Falha ao alterar estoque"}`);
+    }
+  }
 
+  // Carrega opções de produtos no select
+  async function carregarProdutos() {
+    const select = document.getElementById("produto");
+    const token  = localStorage.getItem("token");
+    try {
+      const res = await fetch("http://localhost:8000/integration/estoque", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error();
+      const produtos = await res.json();
+      select.innerHTML = "";
+      produtos.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value       = p.value;
+        opt.textContent = p.name;
+        select.appendChild(opt);
+      });
+    } catch {
+      select.innerHTML = `<option value="">Erro ao carregar produtos</option>`;
+    }
+  }
 
-
-
+  // Cria parágrafo de mensagem sob o form de pedido
+  function criarMensagem() {
+    const p = document.createElement("p");
+    p.id = "mensagem-pedido";
+    p.style.marginTop = "10px";
+    document.getElementById("registrar-secao").appendChild(p);
+    return p;
+  }
 });

@@ -91,4 +91,32 @@ body {
   color: white;
 }
 
+/* Wrapper para centralizar a tabela de pedidos */
+.tabela-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 
+/* Tabela de pedidos com mesma estética da de estoque */
+.tabela-pedidos {
+  width: 100%;
+  max-width: 900px;      /* ajuste conforme precisar */
+  border-collapse: collapse;
+  margin: 2rem 0;        /* espaço acima e abaixo */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.tabela-pedidos th,
+.tabela-pedidos td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.tabela-pedidos tbody tr:nth-child(odd) {
+  background-color: #f5f5f5;
+}
