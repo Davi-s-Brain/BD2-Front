@@ -57,40 +57,98 @@ window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
-document.addEventListener("DOMContentLoaded", () => {
-  const loginButton = document.getElementById("loginBtn");
-  const errorMsg = document.getElementById("error-msg");
+document.addEventListener('DOMContentLoaded', () => {
+  const API_BASE      = 'http://localhost:8000';
+  const loginBtn      = document.getElementById('loginBtn');
+  const funcBtn       = document.getElementById('funcBtn');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const idInput       = document.getElementById('id');
+  const errorMsg      = document.getElementById('error-msg');
 
-  loginButton.addEventListener("click", async () => {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    errorMsg.textContent = ""; // Limpa erro anterior
+  let isFuncionarioMode = false;
 
+  // Estado inicial
+  funcBtn.textContent = 'Funcionário';
+  idInput.style.display = 'none';
+  errorMsg.textContent = '';
+
+  // Toggle de modo: Funcionário <-> Voltar
+  funcBtn.addEventListener('click', () => {
+    isFuncionarioMode = !isFuncionarioMode;
+    idInput.style.display = isFuncionarioMode ? 'block' : 'none';
+    funcBtn.textContent = isFuncionarioMode ? 'Voltar' : 'Funcionário';
+    errorMsg.textContent = '';
+  });
+
+  // Handler do botão Entrar
+  loginBtn.addEventListener('click', async () => {
+    errorMsg.textContent = '';
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+    if (!username || !password) {
+      errorMsg.textContent = 'Informe usuário e senha.';
+      return;
+    }
+
+    let token;
+    // 1) Login normal
     try {
-      const response = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+      const resp = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
-
-      if (response.status === 200) {
-        const data = await response.json();
-        localStorage.setItem('token', data.access_token);
-        localStorage.setItem("username", username);
-        window.location.href = "index.html"; // Redireciona ao sucesso
-      } else if (response.status === 429) {
-        errorMsg.textContent = "Muitas tentativas. Tente novamente mais tarde.";
-      } else {
-        errorMsg.textContent = "Não foi possível autenticar. Verifique suas credenciais.";
+      if (!resp.ok) {
+        errorMsg.textContent = resp.status === 429
+          ? 'Muitas tentativas. Tente mais tarde.'
+          : 'Usuário ou senha inválidos.';
+        return;
       }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-      errorMsg.textContent = "Erro de conexão. Tente novamente mais tarde.";
+      const data = await resp.json();
+      token = data.access_token;
+      localStorage.setItem('token', token);
+    } catch {
+      errorMsg.textContent = 'Erro de conexão no login.';
+      return;
     }
+
+    // 2) Se estiver em modo funcionário, faz a verificação extra
+    if (isFuncionarioMode) {
+      const idValue = idInput.value.trim();
+      if (!idValue) {
+        errorMsg.textContent = 'Informe o ID do funcionário.';
+        return;
+      }
+      try {
+        const respF = await fetch(`${API_BASE}/funcionarios/${idValue}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (!respF.ok) {
+          errorMsg.textContent = respF.status === 404
+            ? 'Funcionário não encontrado.'
+            : 'Erro ao buscar funcionário.';
+          return;
+        }
+        // ambos deram certo: redireciona para página de funcionário
+        window.location.href = './funcionario.html';
+        return;
+      } catch {
+        errorMsg.textContent = 'Erro de conexão ao buscar funcionário.';
+        return;
+      }
+    }
+
+    // modo normal: redireciona para tela principal
+    window.location.href = './index.html';
   });
 });
+
 async function register() {
   const username = document.querySelector('input[name="username"]').value;
   const password = document.querySelector('input[name="password"]').value;
@@ -134,6 +192,3 @@ function createMessageDiv(type) {
   container.appendChild(div);
   return div;
 }
-
-// Adiciona listener no botão
-document.getElementById('registerBtn').addEventListener('click', register);
