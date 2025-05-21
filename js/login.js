@@ -147,10 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // modo normal: redireciona para tela principal
     window.location.href = './index.html';
   });
+
+  const registerBtn = document.getElementById('registerBtn');
+  if (registerBtn) {
+    registerBtn.addEventListener('click', e => {
+      e.preventDefault();  // evita recarregar a página
+      register();
+    });
+  }
 });
 
 async function register() {
-  const username = document.querySelector('input[name="username"]').value;
+  const username = document.querySelector('input[name="username"]').value.trim();
   const password = document.querySelector('input[name="password"]').value;
   const messageDiv = document.getElementById('messageRegister') || createMessageDiv('register');
 
@@ -166,18 +174,28 @@ async function register() {
       body: JSON.stringify({ username, password }),
     });
 
-    if (response.status === 200) {
-    localStorage.setItem('username', username);
-    localStorage.setItem('token', data.token)
-    window.location.href = "index.html";
-    } else if (response.status === 400) {
+    // Faz o parse antes de usar data
+    const data = await response.json();
+
+    if (response.ok) {
+      // A API pode retornar .access_token ou .token
+      const token = data.access_token || data.token;
+      localStorage.setItem('username', username);
+      localStorage.setItem('token', token);
+      window.location.href = 'index.html';
+    }
+    else if (response.status === 400) {
       messageDiv.textContent = "Usuário já existe, tente outro.";
-    } else if (response.status === 429) {
+    }
+    else if (response.status === 429) {
       messageDiv.textContent = "Muitas tentativas, espere um momento.";
-    } else {
+    }
+    else {
       messageDiv.textContent = "Erro ao cadastrar, tente novamente.";
     }
-  } catch (error) {
+  }
+  catch (error) {
+    console.error('Erro no register():', error);
     messageDiv.textContent = "Erro na conexão, tente novamente.";
   }
 }
