@@ -1,5 +1,3 @@
-# robots.txt para BD2-Front - Sistema web de fast food
-
 User-agent: *
 Allow: /
 Allow: /index.html
