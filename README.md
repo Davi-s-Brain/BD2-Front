@@ -28,7 +28,28 @@ Este é um projeto front-end desenvolvido com HTML, CSS e JavaScript, simulando 
 ### Tela do Funcionário (funcionario.html)
 - Gerenciamento de pedidos
 - Interface administrativa
-
+## 📁 Estrutura do Projeto
+BD2-Front/
+```
+├── css/
+│ ├── index.css
+│ ├── login.css
+│ └── funcionario.css
+├── fonts/
+│ └── … (arquivos de fontes)
+├── images/
+│ └── … (arquivos de imagem)
+├── js/
+│ ├── index.js
+│ ├── login.js
+│ └── funcionario.js
+├── source/
+│ ├── index.html
+│ ├── login.html
+│ └── funcionario.html
+├── LICENSE
+└── README.md
+```
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
@@ -38,7 +59,7 @@ Este é um projeto front-end desenvolvido com HTML, CSS e JavaScript, simulando 
 
 1. **Clone o repositório**
    ```bash
-   git clone [url-do-repositorio]
+   git clone https://github.com/Davi-s-Brain/BD2-Front.git
    ```
 
 2. **Navegue até a pasta do projeto**
@@ -69,11 +90,14 @@ Este é um projeto front-end desenvolvido com HTML, CSS e JavaScript, simulando 
 - Este é um projeto puramente front-end, sem persistência de dados
 
 ## 👥 Autores
-- [Seu Nome]
-- [Nome dos Colaboradores]
+- Catarina Macedo Scabelli
+- Davi Batista de Souza - 14565900
+- Geovanny Luan Piedade - 14573909
+- Rafaella Scarel Caminaga - 14108228
+- Sarah Portella Forte -  8518075
 
 ## 📄 Licença
-Este projeto está sob a licença [sua licença] - veja o arquivo LICENSE.md para detalhes.
+Este projeto está sob a licença - veja o arquivo LICENSE.md para detalhes.
 
 ---
 
