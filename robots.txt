@@ -1,0 +1,18 @@
+# robots.txt para BD2-Front - Sistema web de fast food
+
+User-agent: *
+Allow: /
+Allow: /index.html
+
+Disallow: /login.html
+Disallow: /funcionario.html
+
+Disallow: :5500/
+
+Disallow: /css/
+Disallow: /js/
+Disallow: /assets/
+
+Crawl-delay: 10
+
+Host: localhost
