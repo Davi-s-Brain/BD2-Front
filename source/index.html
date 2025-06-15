@@ -1,241 +1,304 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Projeto Inspirado no Burger King</title>
-    <link rel="icon" type="image/x-icon" href="../images/sanduichelindju.png">
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
+    <link rel="icon" type="image/x-icon" href="../images/sanduichelindju.png" />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
     <header class="cabecalho">
-        <div class="logo">
-            <img src="../images/sanduichelindju.png" alt="Logo" style="height: 50px;">
+      <div class="logo">
+        <img
+          src="../images/sanduichelindju.png"
+          alt="Logo"
+          style="height: 50px"
+        />
+      </div>
+      <div class="usuario">
+        <span id="saudacao" class="saudacao"></span>
+      </div>
+      <div class="promocoes">
+        <div class="banner-promocional">
+          Cupons & Recompensas <button>Inserir código</button>
         </div>
-        <div class="usuario">
-            <span id = "saudacao" class="saudacao"></span>
-        </div>
-        <div class="promocoes">
-            <div class="banner-promocional">
-                Cupons & Recompensas <button>Inserir código</button>
-            </div>
-        </div>
+      </div>
     </header>
 
     <aside class="menu-lateral">
-        <div class="secao-menu lancamentos ativo" data-secao="lancamentos">
-            <span>🔥 Lançamentos</span>
-        </div>
-        <div class="secao-menu acompanhamentos" data-secao="acompanhamentos">
-            <span>🍟 Acompanhamentos</span>
-        </div>
-        <div class="secao-menu sobremesa" data-secao="sobremesa">
-            <span>🍦 Sobremesa</span>
-        </div>
-        <div class="secao-menu bebida" data-secao="bebida">
-            <span>🥤 Bebida</span>
-        </div>
+      <div class="secao-menu lancamentos ativo" data-secao="lancamentos">
+        <span>🔥 Lançamentos</span>
+      </div>
+      <div class="secao-menu acompanhamentos" data-secao="acompanhamentos">
+        <span>🍟 Acompanhamentos</span>
+      </div>
+      <div class="secao-menu sobremesa" data-secao="sobremesa">
+        <span>🍦 Sobremesa</span>
+      </div>
+      <div class="secao-menu bebida" data-secao="bebida">
+        <span>🥤 Bebida</span>
+      </div>
     </aside>
 
     <main class="conteudo-principal">
-        <section class="banner-principal">
-            <img src="../images/banner.jpg" alt="Sanduiches gostosos" style="width: 100%;">
-        </section>
+      <section class="banner-principal">
+        <img
+          src="../images/banner.jpg"
+          alt="Sanduiches gostosos"
+          style="width: 100%"
+        />
+      </section>
 
-        <section class="lista-produtos" id="lancamentos-secao">
-            <h2>Lançamentos</h2>
-            <div class="produtos-grid">
-                <div class="produto">
-                    <img src="../images/sanduichedefrango.jpg" alt="Sanduiche de Frango">
-                    <h3>Sanduiche de Frango com maionese</h3>
-                    <span class="preco">R$ 39,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/sanduichedefrangogrelhado.jpg" alt="Sanduíche de frango cremoso">
-                    <h3>Sanduiche de Frango grelhado com salada</h3>
-                    <span class="preco">R$ 19,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/sanduichedepeitodeperu.jpg", alt="Sanduíche de peito de peru">
-                    <h3>Sanduíche de peito de peru</h3>
-                    <span class="preco">R$ 18,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/sanduichepastrami.jpg" alt="Sanduiche de Pastrami">
-                    <h3>Sanduiche de Pastrami apetitoso</h3>
-                    <span class="preco">R$ 35,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/steakqueijoderretido.jpg" alt="Sanduíche de steak com queijo derretido">
-                    <h3>Sanduíche de steak com queijo derretido</h3>
-                    <span class="preco">R$ 39,90</span>
-                </div>
-            </div>
-        </section>
+      <section class="lista-produtos" id="lancamentos-secao">
+        <h2>Lançamentos</h2>
+        <div class="produtos-grid">
+          <div class="produto">
+            <img
+              src="../images/sanduichedefrango.jpg"
+              alt="Sanduiche de Frango"
+            />
+            <h3>Sanduiche de Frango com maionese</h3>
+            <span class="preco">R$ 39,90</span>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/sanduichedefrangogrelhado.jpg"
+              alt="Sanduíche de frango cremoso"
+            />
+            <h3>Sanduiche de Frango grelhado com salada</h3>
+            <span class="preco">R$ 19,90</span>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/sanduichedepeitodeperu.jpg"
+              ,
+              alt="Sanduíche de peito de peru"
+            />
+            <h3>Sanduíche de peito de peru</h3>
+            <span class="preco">R$ 18,90</span>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/sanduichepastrami.jpg"
+              alt="Sanduiche de Pastrami"
+            />
+            <h3>Sanduiche de Pastrami apetitoso</h3>
+            <span class="preco">R$ 35,90</span>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/steakqueijoderretido.jpg"
+              alt="Sanduíche de steak com queijo derretido"
+            />
+            <h3>Sanduíche de steak com queijo derretido</h3>
+            <span class="preco">R$ 39,90</span>
+          </div>
+        </div>
+      </section>
 
-        <section class="lista-produtos" id="acompanhamentos-secao">
-            <h2>Acompanhamentos</h2>
-            <div class="produtos-grid">
-                <div class="produto">
-                    <img src="../images/batatafrita.jpg" alt="Batata frita">
-                    <h3>Batata frita crocante</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/batataparafuso.jpeg" alt="Batata frita parafuso Crinkle">
-                    <h3>Batata frita parafuso Crinkle</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/batatascarinhas.jpeg" alt="Batata frita de carinha">
-                    <h3>Batata frita de carinha</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/nuggets.avif" alt="Nuggets crocante">
-                    <h3>Nuggets crocante</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/salada.webp" alt="Salada fresca">
-                    <h3>Salada fresca</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-            </div>
-        </section>
-        
-        <section class="lista-produtos" id="sobremesa-secao">
-            <h2>Sobremesas</h2>
-            <div class="produtos-grid">
-                <div class="produto">
-                    <img src="../images/casquinha.jpeg" alt="Sorvete de casquinha">
-                    <h3>Sorvete de casquinha</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/banofe.avif" alt="Banoffee">
-                    <h3>Banoffee</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/cookies2.jpg" alt="Cookies">
-                    <h3>Cookies</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/pudim.jpg" alt="Pudim com calda">
-                    <h3>Pudim de leite</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/cheesecake.jpg" alt="cheese cake">
-                    <h3>Cheese cake</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/bolo_cenoura_horizontal.webp" alt="Bolo de cenoura com chocolate">
-                    <h3>Bolo de cenoura com chocolate</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-            </div>
-        </section>
+      <section class="lista-produtos" id="acompanhamentos-secao">
+        <h2>Acompanhamentos</h2>
+        <div class="produtos-grid">
+          <div class="produto">
+            <img src="../images/batatafrita.jpg" alt="Batata frita" />
+            <h3>Batata frita crocante</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/batataparafuso.jpeg"
+              alt="Batata frita parafuso Crinkle"
+            />
+            <h3>Batata frita parafuso Crinkle</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/batatascarinhas.jpeg"
+              alt="Batata frita de carinha"
+            />
+            <h3>Batata frita de carinha</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/nuggets.avif" alt="Nuggets crocante" />
+            <h3>Nuggets crocante</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/salada.webp" alt="Salada fresca" />
+            <h3>Salada fresca</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+        </div>
+      </section>
 
-        <section class="lista-produtos" id="bebidas-secao">
-            <h2>Bebidas</h2>
-            <div class="produtos-grid">
-                <div class="produto">
-                    <img src="../images/refrijesus.jpeg" alt="Guaraná Jesus">
-                    <h3>Guaraná Jesus</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/guaranazero.avif" alt="Guaraná Zero" style="max-height: 70%;">
-                    <h3>Guaraná Antarctica Zero</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/h2o.jpg" alt="h2o">
-                    <h3>H2O</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/cocaks.webp" alt="Coca Cola KS">
-                    <h3>Coca Cola KS</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/brahma.webp" alt="Brahma lata">
-                    <h3>Brahma lata</h3>
-                    <span class="preco">R$ 9,90</span>
-                </div>
-                <div class="produto">
-                    <img src="../images/cosmopolitan.webp" alt="Cosmopolitan">
-                    <h3>Cosmopolitan</h3>
-                    <span class="preco">R$ 13,13</span>
-                </div>
-            </div>
-        </section>
-        
-        <section class="tela-pagamento" style="display: none;">
+      <section class="lista-produtos" id="sobremesa-secao">
+        <h2>Sobremesas</h2>
+        <div class="produtos-grid">
+          <div class="produto">
+            <img src="../images/casquinha.jpeg" alt="Sorvete de casquinha" />
+            <h3>Sorvete de casquinha</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/banofe.avif" alt="Banoffee" />
+            <h3>Banoffee</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/cookies2.jpg" alt="Cookies" />
+            <h3>Cookies</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/pudim.jpg" alt="Pudim com calda" />
+            <h3>Pudim de leite</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/cheesecake.jpg" alt="cheese cake" />
+            <h3>Cheese cake</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/bolo_cenoura_horizontal.webp"
+              alt="Bolo de cenoura com chocolate"
+            />
+            <h3>Bolo de cenoura com chocolate</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="lista-produtos" id="bebidas-secao">
+        <h2>Bebidas</h2>
+        <div class="produtos-grid">
+          <div class="produto">
+            <img src="../images/refrijesus.jpeg" alt="Guaraná Jesus" />
+            <h3>Guaraná Jesus</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/guaranazero.avif"
+              alt="Guaraná Zero"
+              style="max-height: 70%"
+            />
+            <h3>Guaraná Antarctica Zero</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/h2o.jpg" alt="h2o" />
+            <h3>H2O</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/cocaks.webp" alt="Coca Cola KS" />
+            <h3>Coca Cola KS</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/brahma.webp" alt="Brahma lata" />
+            <h3>Brahma lata</h3>
+            <span class="preco">R$ 9,90</span>
+          </div>
+          <div class="produto">
+            <img src="../images/cosmopolitan.webp" alt="Cosmopolitan" />
+            <h3>Cosmopolitan</h3>
+            <span class="preco">R$ 13,13</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="tela-pagamento" style="display: none">
+        <div class="botoes-pagamento">
           <button id="botao-voltar">Voltar</button>
-          <h2>Pagamento</h2>
+          <button id="botao-confirma-pag">Confirmar Pagamento</button>
+        </div>
+        <h2>Pagamento</h2>
 
-          <div class="resumo-pedido">
-              <p><strong>Resumo do Pedido:</strong></p>
-              <ul id="resumo-itens">
-                  <!-- Exemplo de item -->
-                  <li>1x Sanduíche de Frango - R$ 39,90</li>
-              </ul>
-              <p><strong>Total:</strong> <span id="total-pagar">R$ 00,00</span></p>
+        <div class="resumo-pedido">
+          <h2>Resumo do Pedido</h2>
+          <ul id="resumo-itens">
+            <li>
+              <span class="item-nome">1x Sanduiche de Frango com maionese</span>
+              <span class="item-preco">R$ 39,00</span>
+            </li>
+            <li>
+              <span class="item-nome"
+                >1x Sanduiche de Frango grelhado com salada</span
+              >
+              <span class="item-preco">R$ 19,00</span>
+            </li>
+          </ul>
+          <div class="divisor"></div>
+          <div class="total-pedido">
+            <span class="label">Total:</span>
+            <span id="total-pagar">R$ 58,00</span>
+          </div>
+        </div>
+
+        <div class="metodo-pagamento">
+          <p><strong>Escolha o método de pagamento:</strong></p>
+          <label
+            ><input type="radio" name="pagamento" value="cartao" />
+            Crédito</label>
+          <label
+            ><input type="radio" name="pagamento" value="cartao" />
+            Débito</label>
+          <label
+            ><input type="radio" name="pagamento" value="dinheiro" />
+            Dinheiro</label>
+          <label><input type="radio" name="pagamento" value="pix" /> Pix</label>
+
+          <div id="campo-troco" style="display: none; margin-top: 10px">
+            <label>Troco para quanto?</label>
+            <input type="number" id="troco" placeholder="Ex: 100.00" />
           </div>
 
-          <div class="metodo-pagamento">
-              <p><strong>Escolha o método de pagamento:</strong></p>
-              <label><input type="radio" name="pagamento" value="cartao"> Crédito</label><br>
-              <label><input type="radio" name="pagamento" value="cartao"> Débito</label><br>
-              <label><input type="radio" name="pagamento" value="dinheiro"> Dinheiro</label><br>
-              <label><input type="radio" name="pagamento" value="pix"> Pix</label><br>
-
-              <div id="campo-troco" style="display: none; margin-top: 10px;">
-                  <label>Troco para quanto?</label>
-                  <input type="number" id="troco" placeholder="Ex: 100.00">
-              </div>
-
-              <div id="campo-pix" style="display: none; margin-top: 10px;">
-                  <label>Escaneie o QR Code para pagar:</label>
-                  <img src="../images/pix.jpg">
-              </div>
+          <div id="campo-pix" style="display: none; margin-top: 10px">
+            <label>Escaneie o QR Code para pagar:</label>
+            <img src="../images/pix.jpg" />
           </div>
-          
-          <button id="botao-confirma-pag" onclick="finalizarPagamento()">Confirmar Pagamento</button>
-        </section>
+        </div>
+      </section>
 
-        <section class="tela-confirmacao" style="display: none;">
-            <h2>Pedido Confirmado!</h2>
-            <p>Seu pagamento foi confirmado com sucesso.</p>
-            <button onclick="recomecarPedido()">Fazer outro pedido</button>
-        </section>
+      <section class="tela-confirmacao" style="display: none">
+        <h2>Pedido Confirmado!</h2>
+        <p>Seu pagamento foi confirmado com sucesso.</p>
+        <button onclick="recomecarPedido()">Fazer outro pedido</button>
+      </section>
 
-        <section class="sacola-expandida" id="sacola-expandida" style="display: none;">
-          <button id="fecharSacola" class="fechar-sacola">Fechar ✕</button>
-          <h2>Sua sacola</h2>
-        </section>
-      </main>
-
+      <section
+        class="sacola-expandida"
+        id="sacola-expandida"
+        style="display: none"
+      >
+        <button id="fecharSacola" class="fechar-sacola">Fechar ✕</button>
+        <h2>Sua sacola</h2>
+      </section>
+    </main>
 
     <footer class="rodape">
-        <div class="sacola">
-            <span class="pagamento">
-              <img src="../images/carrinhodecomprasbranco.png" alt="Sacola" style="height: 20px;"> 
-              <button id="abrirSacola">Ver sua sacola</button>
-            </span>
-        </div>
-        <div class="pedido">
-            <span class="valor-total">R$ 00,00</span>
-            <button class="recomecar-pedido">Continuar para pagamento</button>
-        </div>
+      <div class="sacola">
+        <span class="pagamento">
+          <img
+            src="../images/carrinhodecomprasbranco.png"
+            alt="Sacola"
+            style="height: 20px"
+          />
+          <button id="abrirSacola">Ver sua sacola</button>
+        </span>
+      </div>
+      <div class="pedido">
+        <span class="valor-total">R$ 00,00</span>
+        <button class="recomecar-pedido">Continuar para pagamento</button>
+      </div>
     </footer>
 
     <script src="../js/scripts.js" defer></script>
-</body>
+  </body>
 </html>

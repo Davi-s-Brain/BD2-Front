@@ -327,113 +327,179 @@ body {
 
 .conteudo-tela-pagamento {
   width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .tela-pagamento {
   background-color: #fff;
-  padding: 20px 40px;
-  margin: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px #ccc;
+  padding: 30px 40px;
+  margin: 20px auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .tela-pagamento h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 1.8em;
+}
+
+.metodo-pagamento {
+  margin: 25px 0;
 }
 
 .metodo-pagamento label {
-  display: block;
-  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  padding: 15px;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.metodo-pagamento label:hover {
+  border-color: #ffc72e;
+  background-color: #fff9e6;
+}
+
+.metodo-pagamento input[type="radio"] {
+  margin-right: 12px;
+  transform: scale(1.2);
 }
 
 #troco {
-  padding: 5px;
   width: 100%;
-  margin-bottom: 20px;
+  padding: 12px;
+  margin: 15px 0;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+}
+
+#troco:focus {
+  outline: none;
+  border-color: #ffc72e;
 }
 
 .tela-pagamento #botao-voltar {
-  background-color: #ffc72c;
-  border: 1px solid #e47911;
-  border-radius: 10px;
-  padding: 10px 15px;
-  width: 100px;
+  background-color: #fff;
+  border: 2px solid #ffc72e;
+  color: #e47911;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1em;
   font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tela-pagamento #botao-voltar:hover {
+  background-color: #fff9e6;
 }
 
 .tela-pagamento #botao-confirma-pag {
-  background-color: #12b420;
-  border: 1px solid #005000;
-  border-radius: 10px;
-  padding: 10px 15px;
-  width: 200px;
+  background-color: #2a8500;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 14px 28px;
+  font-size: 1.1em;
   font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 15px;
 }
 
-.tela-confirmacao button{
-  background-color: #ffc72c;
-  border: 1px solid #e47911;
-  border-radius: 10px;
-  padding: 10px 15px;
-  width: 200px;
+.tela-pagamento #botao-confirma-pag:hover {
+  background-color: #236f00;
+  transform: translateY(-1px);
+}
+
+.botoes-pagamento {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 15px;
+}
+
+/* Estilo para o campo PIX quando visível */
+#campo-pix {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+/* Estilo para o campo de troco quando visível */
+#campo-troco {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+/* Estilo para o resumo do pedido */
+#resumo-itens {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+#resumo-itens li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin: 10px 0;
+  background-color: #fff9e6;
+  border-radius: 8px;
+  border: 1px solid #ffc72e;
+  font-size: 1.1em;
+}
+
+#resumo-itens .item-nome {
+  color: #333;
+  flex: 1;
+  padding-right: 15px;
+}
+
+#resumo-itens .item-preco {
+  color: #2a8500;
   font-weight: bold;
-  cursor: pointer;
+  font-size: 1.2em;
 }
 
-/* Adaptações para telas menores (opcional) */
-@media (max-width: 768px) {
-  body {
-    flex-direction: column;
-  }
-
-  .menu-lateral {
-    width: 100%;
-    overflow-x: auto;
-    height: auto;
-    padding-top: 60px;
-    /* Ajuste para o cabeçalho menor */
-    position: fixed;
-    top: 60px;
-    z-index: 99;
-    display: flex;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-
-  .secao-menu {
-    flex-grow: 1;
-    text-align: center;
-    border-left: none !important;
-    border-bottom: 1px solid #eee;
-  }
-
-  .conteudo-principal {
-    padding-top: 120px;
-    flex-grow: 1;
-    padding: 20px;
-    padding-top: 80px;
-    margin-bottom: 70px;
-  }
-
-  .rodape {
-    position: static;
-  }
+/* Estilo para o total */
+.total-pedido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #2a8500;
+  border-radius: 8px;
+  color: white;
 }
 
-h2, h3 {
-  font-family: titanOne;
-  font-weight: 100;
+.total-pedido .label {
+  font-size: 1.3em;
+  font-weight: bold;
 }
 
-.recomecar-pedido {
-  margin-right: 30px;
+#total-pagar {
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
-.pagamento:hover {
-  color: #000;
-  transition: 0.1s;
-  border-radius: 3%;
-  cursor: pointer;
+/* Adicione uma linha divisória antes do total */
+.divisor {
+  height: 2px;
+  background-color: #eee;
+  margin: 20px 0;
 }
