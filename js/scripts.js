@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   const menuLateral = document.querySelector(".menu-lateral");
   const secoesMenu = menuLateral.querySelectorAll(".secao-menu");
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
   if (username) {
-    const saudacao = document.getElementById('saudacao');
+    const saudacao = document.getElementById("saudacao");
     if (saudacao) {
       saudacao.textContent = `Oi, ${username}!`;
     }
@@ -186,4 +186,98 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Inicializa o carrinho
+  let carrinho = [];
+  let valorTotal = 0;
+
+  // Adiciona evento de clique para todos os produtos
+  document.querySelectorAll(".produto").forEach((produto) => {
+    produto.addEventListener("click", function () {
+      const nome = this.querySelector("h3").textContent;
+      const preco = parseFloat(
+        this.querySelector(".preco").textContent.replace("R$", "").trim()
+      );
+      const imagem = this.querySelector("img").src; // Captura a URL da imagem
+
+      adicionarAoCarrinho(nome, preco, imagem);
+    });
+  });
+
+  // Modifique a função adicionarAoCarrinho para incluir a imagem
+  function adicionarAoCarrinho(nome, preco, imagem) {
+    carrinho.push({ nome, preco, imagem });
+    valorTotal += preco;
+
+    document.querySelector(
+      ".valor-total"
+    ).textContent = `R$ ${valorTotal.toFixed(2)}`;
+
+    atualizarSacolaExpandida();
+    atualizarResumoPagamento();
+  }
+
+  // Atualize a função atualizarSacolaExpandida para mostrar as imagens
+  function atualizarSacolaExpandida() {
+    const sacolaContainer = document.getElementById("sacola-expandida");
+    if (!sacolaContainer) return;
+
+    // Limpa itens existentes
+    while (sacolaContainer.querySelector(".item-sacola")) {
+      sacolaContainer.querySelector(".item-sacola").remove();
+    }
+
+    // Adiciona novos itens com imagens
+    carrinho.forEach((item) => {
+      const itemHTML = `
+        <div class="item-sacola">
+          <img src="${item.imagem}" alt="${item.nome}" class="imagem-produto">
+          <div class="info-produto">
+            <h3>${item.nome}</h3>
+            <button class="remover-item">Remover item</button>
+          </div>
+          <div class="acoes">
+            <h3><span class="preco">R$ ${item.preco.toFixed(2)}</span></h3>
+          </div>
+        </div>
+      `;
+      sacolaContainer.insertAdjacentHTML("beforeend", itemHTML);
+    });
+  }
+
+  function atualizarResumoPagamento() {
+    const resumoItens = document.getElementById("resumo-itens");
+    if (!resumoItens) return;
+
+    resumoItens.innerHTML = "";
+    carrinho.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = `1x ${item.nome} - R$ ${item.preco.toFixed(2)}`;
+      resumoItens.appendChild(li);
+    });
+
+    const totalPagar = document.getElementById("total-pagar");
+    if (totalPagar) {
+      totalPagar.textContent = `R$ ${valorTotal.toFixed(2)}`;
+    }
+  }
+
+  // Adiciona funcionalidade para remover itens
+  document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("remover-item")) {
+      const itemSacola = e.target.closest(".item-sacola");
+      const nome = itemSacola.querySelector("h3").textContent;
+      const index = carrinho.findIndex((item) => item.nome === nome);
+
+      if (index > -1) {
+        valorTotal -= carrinho[index].preco;
+        carrinho.splice(index, 1);
+
+        document.querySelector(
+          ".valor-total"
+        ).textContent = `R$ ${valorTotal.toFixed(2)}`;
+        atualizarSacolaExpandida();
+        atualizarResumoPagamento();
+      }
+    }
+  });
 });
