@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
     produto.addEventListener("click", function () {
       const nome = this.querySelector("h3").textContent;
       const preco = parseFloat(
-        this.querySelector(".preco").textContent.replace("R$", "").trim()
+        this.querySelector(".preco").textContent.replace("R$", "").replace(",",".").trim()
       );
       const imagem = this.querySelector("img").src; // Captura a URL da imagem
 
