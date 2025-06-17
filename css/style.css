@@ -136,6 +136,9 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding-bottom: 14px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .produto:hover {
@@ -155,20 +158,93 @@ body {
   /* Para cobrir o espaço sem distorcer */
 }
 
-.produto h3 {
-  margin-top: 0;
-  font-size: 1.1em;
-  color: #333;
-  padding: 0 10px;
+.info-produto {
+  display: flex; /* Torna o .info-produto um container flex */
+  flex-direction: column; 
+  align-items: center;
 }
 
-.preco {
-  color: #28a745;
-  /* Cor verde para o preço */
-  font-weight: bold;
-  display: block;
-  margin-top: 8px;
+.tags {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
 }
+
+.tag {
+  font-size: 0.75rem;
+  background-color: #eee;
+  padding: 4px 8px;
+  border-radius: 20px;
+  color: #333;
+}
+
+.tag.tipo {
+  background-color: #ffd1dc; /* exemplo: rosa para carne branca */
+}
+
+.tag.sem-gluten {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.tag.sem-lactose {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.preco-e-botao {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preco-e-botao span {
+  margin: 5px 0;
+}
+
+.btn-adicionar {
+  margin-top: 5px;
+  background-color: #ff5a00;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-adicionar:hover {
+  background-color: #e64a00;
+}
+
+/* Estilos de produto indisponível */
+
+.produto.indisponivel {
+  opacity: 0.6;
+  position: relative;
+  pointer-events: none; /* impede clique, se desejar */
+}
+
+.produto.indisponivel::after {
+  content: "Indisponível";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff4d4f;
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.produto.indisponivel button.btn-adicionar {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 
 .fechar-sacola {
   background: none;

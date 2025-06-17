@@ -28,11 +28,11 @@
       <div class="secao-menu acompanhamentos" data-secao="acompanhamentos">
         <span>🍟 Acompanhamentos</span>
       </div>
-      <div class="secao-menu sobremesa" data-secao="sobremesa">
-        <span>🍦 Sobremesa</span>
+      <div class="secao-menu sobremesa" data-secao="sobremesas">
+        <span>🍦 Sobremesas</span>
       </div>
-      <div class="secao-menu bebida" data-secao="bebida">
-        <span>🥤 Bebida</span>
+      <div class="secao-menu bebida" data-secao="bebidas">
+        <span>🥤 Bebidas</span>
       </div>
     </aside>
 
@@ -48,46 +48,334 @@
       <section class="lista-produtos" id="lancamentos-secao">
         <h2>Lançamentos</h2>
         <div class="produtos-grid">
-          <div class="produto">
+          <div class="produto indisponivel">
             <img
-              src="../images/sanduichedefrango.jpg"
-              alt="Sanduiche de Frango"
+              src="../images/peru-creamcheese.png"
+              alt="Sanduiche de peito de peru e cream cheese"
             />
-            <h3>Sanduiche de Frango com maionese</h3>
-            <span class="preco">R$ 39,90</span>
+            <div class="info-produto">
+              <h3>Sanduíche de peito de peru e cream cheese</h3>
+              <div class="tags">
+                <span class="tag tipo">Peru</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 30,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img
-              src="../images/sanduichedefrangogrelhado.jpg"
-              alt="Sanduíche de frango cremoso"
+              src="../images/frango-desfiado.png"
+              alt="Sanduíche de frango desfiado"
             />
-            <h3>Sanduiche de Frango grelhado com salada</h3>
-            <span class="preco">R$ 19,90</span>
+            <div class="info-produto">
+              <h3>Sanduíche de frango desfiado</h3>
+              <div class="tags">
+                <span class="tag tipo">Frango</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 28,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img
-              src="../images/sanduichedepeitodeperu.jpg"
-              ,
-              alt="Sanduíche de peito de peru"
+              src="../images/rosbife.png"
+              alt="Sanduíche de rosbife"
             />
-            <h3>Sanduíche de peito de peru</h3>
-            <span class="preco">R$ 18,90</span>
+            <div class="info-produto">
+              <h3>Sanduíche de rosbife</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 32,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img
-              src="../images/sanduichepastrami.jpg"
-              alt="Sanduiche de Pastrami"
+              src="../images/frango-maionese.png"
+              alt="Sanduíche de Frango com Maionese"
             />
-            <h3>Sanduiche de Pastrami apetitoso</h3>
-            <span class="preco">R$ 35,90</span>
+            <div class="info-produto">
+              <h3>Sanduíche de frango com maionese</h3>
+              <div class="tags">
+                <span class="tag tipo">Frango</span>
+                <span class="tag sem-gluten">Sem Glúten</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 39,90</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img
-              src="../images/steakqueijoderretido.jpg"
+              src="../images/frango-salada.png"
+              alt="Sanduíche de Frango Grelhado com Salada"
+            />
+            <div class="info-produto">
+              <h3>Sanduíche de frango grelhado com salada</h3>
+              <div class="tags">
+                <span class="tag tipo">Frango</span>
+                <span class="tag sem-gluten">Sem Glúten</span>
+                <span class="tag sem-lactose">Sem Lactose</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 19,90</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/peito-peru.png"
+              alt="Sanduíche de Peito de Peru"
+            />
+            <div class="info-produto">
+              <h3>Sanduíche de peito de peru</h3>
+              <div class="tags">
+                <span class="tag tipo">Peru</span>
+                <span class="tag sem-gluten">Sem Glúten</span>
+                <span class="tag sem-lactose">Sem Lactose</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 18,90</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/pastrami.png"
+              alt="Sanduíche de Pastrami"
+            />
+            <div class="info-produto">
+              <h3>Sanduíche de pastrami</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+                <span class="tag sem-gluten">Sem Glúten</span>
+                <span class="tag sem-lactose">Sem Lactose</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 35,90</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/steak-queijo.png"
               alt="Sanduíche de steak com queijo derretido"
             />
-            <h3>Sanduíche de steak com queijo derretido</h3>
-            <span class="preco">R$ 39,90</span>
+            <div class="info-produto">
+              <h3>Sanduíche de steak com queijo</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+                <span class="tag sem-gluten">Sem Glúten</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 35,90</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/peixe.png"
+              alt="Sanduíche de Filé de Peixe"
+            />
+            <div class="info-produto">
+              <h3>Sanduíche de filé de peixe</h3>
+              <div class="tags">
+                <span class="tag tipo">Peixe</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 33,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/bacon.png"
+              alt="Sanduíche de Bacon"
+            />
+            <div class="info-produto">
+              <h3>Sanduíche de bacon</h3>
+              <div class="tags">
+                <span class="tag tipo">Suíno</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 26,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/picanha.png"
+              alt="Hambúrguer de Picanha"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer de picanha</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 35,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/fraldinha.png"
+              alt="Hambúrguer de Fraldinha"
+            />
+            <div class="info-produto">
+              <h3>Sanduíche de fraldinha</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 33,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/frango.png"
+              alt="Hambúrguer de Frango"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer de frango</h3>
+              <div class="tags">
+                <span class="tag tipo">Frango</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 29,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/costela.png"
+              alt="Hambúrguer de Costela"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer de costela</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 36,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/veggie.png"
+              alt="'Hambúrguer Veggie"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer veggie</h3>
+              <div class="tags">
+                <span class="tag tipo">Vegano</span>
+                <span class="tag sem-lactose">Sem Lactose</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 28,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/picanha-duplo.png"
+              alt="Hambúrguer Duplo de Picanha"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer duplo de picanha</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 42,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/picanha2.png"
+              alt="Hambúrguer de Picanha"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer de picanha</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 39,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/frango-queijo.png"
+              alt="Hambúrguer de Frango com Queijo"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer de frango com queijo</h3>
+              <div class="tags">
+                <span class="tag tipo">Frango</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 31,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/fraldinha-cheddar.png"
+              alt="Hambúrguer de Fraldinha com Cheddar"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer de fraldinha com cheddar</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 36,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
+          </div>
+          <div class="produto">
+            <img
+              src="../images/gorgonzola.png"
+              alt="Hambúrguer de Costela com Gorgonzola"
+            />
+            <div class="info-produto">
+              <h3>Hambúrguer de costela com gorgonzola</h3>
+              <div class="tags">
+                <span class="tag tipo">Bovino</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 40,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -97,89 +385,181 @@
         <div class="produtos-grid">
           <div class="produto">
             <img src="../images/batata-frita.png" alt="Batata frita" />
-            <h3>Batata frita</h3>
-            <span class="preco">R$ 7,00</span>
+            <div class="info-produto">
+              <h3>Batata frita</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 7,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/batata-crinkle.png" alt="Batata frita parafuso Crinkle" />
-            <h3>Batata Crinkle</h3>
-            <span class="preco">R$ 8,00</span>
+            <div class="info-produto">
+              <h3>Batata crinkle</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 8,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/batata-smile.png" alt="Batata frita de carinha" />
-            <h3>Batata Smile</h3>
-            <span class="preco">R$ 6,00</span>
+            <div class="info-produto">
+              <h3>Batata smile</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 6,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/nuggets.png" alt="Nuggets crocante" />
-            <h3>Nuggets</h3>
-            <span class="preco">R$ 9,90</span>
+            <div class="info-produto">
+              <h3>Nuggets</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 9,90</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/onion-rings.png" alt="Anéis de cebola" />
-            <h3>Onion Rings</h3>
-            <span class="preco">R$ 9,00</span>
+            <div class="info-produto">
+              <h3>Onion rings</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 9,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/salada.png" alt="Salada fresca" />
-            <h3>Salada fresca</h3>
-            <span class="preco">R$ 10,00</span>
+            <div class="info-produto">
+              <h3>Salada fresca</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 10,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="lista-produtos" id="sobremesa-secao">
+      <section class="lista-produtos" id="sobremesas-secao">
         <h2>Sobremesas</h2>
         <div class="produtos-grid">
           <div class="produto">
             <img src="../images/brownie.png" alt="Brownie de chocolate" />
-            <h3>Brownie</h3>
-            <span class="preco">R$ 8,00</span>
+            <div class="info-produto">
+              <h3>Brownie</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 8,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/cookies.png" alt="Cookies com gotas de chocolate" />
-            <h3>Cookies</h3>
-            <span class="preco">R$ 5,00</span>
+            <div class="info-produto">
+              <h3>Cookie</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 5,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/milkshake.png" alt="Milkshake" />
-            <h3>Milkshake</h3>
-            <span class="preco">R$ 10,00</span>
+            <div class="info-produto">
+              <h3>Milkshake</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 10,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/sorvete-baunilha.png" alt="Casquinha de sorvete de baunilha" />
-            <h3>Casquinha de sorvete de baunilha</h3>
-            <span class="preco">R$ 6,00</span>
+            <div class="info-produto">
+              <h3>Sorvete de baunilha</h3>
+              <div class="tags">
+                <span class="tag sem-gluten">Sem glúten</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 6,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/sorvete-chocolate.png" alt="Casquinha de sorvete de chocolate" />
-            <h3>Casquinha de sorvete de chocolate</h3>
-            <span class="preco">R$ 6,00</span>
+            <div class="info-produto">
+              <h3>Sorvete de chocolate</h3>
+              <div class="tags">
+                <span class="tag sem-gluten">Sem glúten</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 6,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/sorvete-morango.png" alt="Casquinha de sorvete de morango" />
-            <h3>Casquinha de sorvete de morango</h3>
-            <span class="preco">R$ 6,00</span>
+            <div class="info-produto">
+              <h3>Sorvete de morango</h3>
+              <div class="tags">
+                <span class="tag sem-gluten">Sem glúten</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 6,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/bolo.png" alt="Bolo de cenoura com chocolate" />
-            <h3>Fatia de bolo de cenoura com chocolate</h3>
-            <span class="preco">R$ 9,90</span>
+            <div class="info-produto">
+              <h3>Bolo de cenoura com chocolate</h3>
+              <div class="tags">
+                <span class="tag sem-gluten">Sem glúten</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 9,90</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/pudim.png" alt="Fatia de pudim de leite" />
-            <h3>Fatia de pudim de leite</h3>
-            <span class="preco">R$ 9,00</span>
+            <div class="info-produto">
+              <h3>Pudim de leite</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 9,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/cheesecake.png" alt="Fatia de cheesecake" />
-            <h3>Fatia de cheesecake</h3>
-            <span class="preco">R$ 11,00</span>
+            <div class="info-produto">
+              <h3>Cheesecake</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 11,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/banoffee.png" alt="Fatia de banoffee" />
-            <h3>Fatia de banoffee</h3>
-            <span class="preco">R$ 11,00</span>
+            <div class="info-produto">
+              <h3>Banoffee</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 11,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -189,117 +569,229 @@
         <div class="produtos-grid">
           <div class="produto">
             <img src="../images/coca-zero.png" alt="Lata de coca zero" />
-            <h3>Coca Zero</h3>
-            <span class="preco">R$ 5,00</span>
+            <div class="info-produto">
+              <h3>Coca-Cola Zero</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 5,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/coca.png" alt="Lata de coca original" style="max-height: 70%" />
-            <h3>Coca Original</h3>
-            <span class="preco">R$ 5,00</span>
+            <div class="info-produto">
+              <h3>Coca-Cola Original</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 5,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/pepsi-zero.png" alt="Lata de Pepsi zero" />
-            <h3>Pepsi Zero</h3>
-            <span class="preco">R$ 4,50</span>
+            <div class="info-produto">
+              <h3>Pepsi Zero</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/pepsi.png" alt="Lata de Pepsi Original" />
-            <h3>Pepsi Original</h3>
-            <span class="preco">R$ 4,50</span>
+            <div class="info-produto">
+              <h3>Pepsi Original</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/guarana.png" alt="Lata de Guaraná Original" />
-            <h3>Guaraná Antárctica Original</h3>
-            <span class="preco">R$ 4,00</span>
+            <div class="info-produto">
+              <h3>Guaraná Antárctica Original</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           <div class="produto">
             <img src="../images/guarana-zero.png" alt="Lata de Guaraná zero" />
-            <h3>Guaraná Antárctica Zero</h3>
-            <span class="preco">R$ 4,50</span>
+            <div class="info-produto">
+              <h3>Guaraná Antárctica Zero</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
          
           <div class="produto">
             <img src="../images/fanta-laranja.png" alt="Lata de Fanta laranja" />
-            <h3>Fanta Laranja</h3>
-            <span class="preco">R$ 4,50</span>
+            <div class="info-produto">
+              <h3>Fanta laranja</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/fanta-uva.png" alt="Garrafa de Fanta uva" />
-            <h3>Fanta Uva</h3>
-            <span class="preco">R$ 4,50</span>
+            <div class="info-produto">
+              <h3>Fanta uva</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/sprite.png" alt="Lata de Sprite original" />
-            <h3>Sprite Original</h3>
-            <span class="preco">R$ 4,50</span>
+            <div class="info-produto">
+              <h3>Sprite original</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/bonafont.png" alt="Garrafa de água sem gás" />
-            <h3>Bonafont sem gás</h3>
-            <span class="preco">R$ 2,00</span>
+            <div class="info-produto">
+              <h3>Água Bonafont sem gás</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 2,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/crystal.png" alt="Garrafa de água com gás" />
-            <h3>Crystal com gás</h3>
-            <span class="preco">R$ 2,50</span>
+            <div class="info-produto">
+              <h3>Água Crystal com gás</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 2,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/heineken.png" alt="Garrafa de Heineken" />
-            <h3>Heineken Original</h3>
-            <span class="preco">R$ 8,00</span>
+            <div class="info-produto">
+              <h3>Heineken original</h3>
+              <div class="tags">
+                <span class="tag sem-lactose">Alcoólico</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 8,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/brahma.png" alt="Garrafa de Brahma" />
-            <h3>Brahma Original</h3>
-            <span class="preco">R$ 6,00</span>
+            <div class="info-produto">
+              <h3>Brahma original</h3>
+              <div class="tags">
+                <span class="tag sem-lactose">Alcoólico</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 6,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/skol.png" alt="Lata de Skol" />
-            <h3>Skol Original</h3>
-            <span class="preco">R$ 5,50</span>
+            <div class="info-produto">
+              <h3>Skol original</h3>
+              <div class="tags">
+                <span class="tag sem-lactose">Alcoólico</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 5,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/budweiser.png" alt="Garrafa de Budweiser" />
-            <h3>Budweiser Original</h3>
-            <span class="preco">R$ 7,00</span>
+            <div class="info-produto">
+              <h3>Budweiser original</h3>
+              <div class="tags">
+                <span class="tag sem-lactose">Alcoólico</span>
+              </div>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 7,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/cha-pessego.png" alt="Copo de chá de pêssego" />
-            <h3>Chá Lipton Pêssego</h3>
-            <span class="preco">R$ 3,50</span>
+            <div class="info-produto">
+              <h3>Chá Lipton pêssego</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 3,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/cha-limao.png" alt="Copo de chá de limão" />
-            <h3>Chá Lipton Limão</h3>
-            <span class="preco">R$ 3,50</span>
+            <div class="info-produto">
+              <h3>Chá Lipton limão</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 3,50</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/suco-laranja.png" alt="Garrafa de suco del Valle de laranja" />
-            <h3>Suco del Valle Laranja</h3>
-            <span class="preco">R$ 4,00</span>
+            <div class="info-produto">
+              <h3>Suco del Valle laranja</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/suco-uva.png" alt="Garrafa de suco del Valle de uva" />
-            <h3>Suco del Valle Uva</h3>
-            <span class="preco">R$ 4,00</span>
+            <div class="info-produto">
+              <h3>Suco del Valle uva</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 4,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
           
           <div class="produto">
             <img src="../images/red-bull.png" alt="Lata de Red Bull" />
-            <h3>Red Bull Original</h3>
-            <span class="preco">R$ 10,00</span>
+            <div class="info-produto">
+              <h3>Red Bull original</h3>
+              <div class="preco-e-botao">
+                <span class="preco">R$ 10,00</span>
+                <button class="btn-adicionar">Adicionar à sacola</button>
+              </div>
+            </div>
           </div>
 
         </div>

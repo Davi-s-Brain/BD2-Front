@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (secaoId === "acompanhamentos") {
         document.getElementById("acompanhamentos-secao").style.display =
           "block";
-      } else if (secaoId === "sobremesa") {
+      } else if (secaoId === "sobremesas") {
         document.getElementById("sobremesa-secao").style.display = "block";
-      } else if (secaoId === "bebida") {
+      } else if (secaoId === "bebidas") {
         document.getElementById("bebidas-secao").style.display = "block";
       }
     });
