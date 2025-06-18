@@ -21,14 +21,24 @@ body {
   color: #000;
   padding: 15px;
   display: flex;
-  justify-content: space-evenly;
+  gap: 50em;
+  justify-content: space-around;
   align-items: center;
-  gap: 1800px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 100%;
   position: fixed;
   top: 0;
   z-index: 100;
+}
+
+.botao-menu-mobile {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #2a8500;
+  margin-right: 10px;
 }
 
 .logo img {
@@ -714,4 +724,124 @@ body {
 
 .btn-avaliar:hover {
   background-color: #e59400;
+}
+
+/* Responsividade */
+/* === RESPONSIVIDADE GERAL === */
+@media (max-width: 1024px) {
+  .menu-lateral {
+    width: 220px;
+    min-width: unset;
+  }
+
+  .cabecalho {
+    gap: 400px;
+  }
+
+  .produtos-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .cabecalho {
+    flex-direction: row;
+    gap: 5em;
+    text-align: center;
+  }
+
+  .botao-menu-mobile {
+    display: block;
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    z-index: 1001;
+  }
+
+  .menu-lateral {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 90px;
+    padding: 20px 10px;
+    left: 0;
+    background-color: #f9f9f9;
+    z-index: 999;
+  }
+
+  .menu-lateral.ativo {
+    display: flex;
+    width: 60%;
+    height: auto;
+  }
+
+  .secao-menu {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    white-space: nowrap;
+  }
+
+  .conteudo-principal {
+    padding-top: 140px; /* mais espaço por causa do menu lateral e header */
+  }
+
+  .area-busca {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filtros-tags {
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .produto {
+    max-width: 100%;
+  }
+
+  .sacola-expandida {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .rodape {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .campo-busca {
+    font-size: 14px;
+  }
+
+  .btn-adicionar {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+
+  .icone-lupa {
+    font-size: 16px;
+  }
+
+  .produto h3 {
+    font-size: 1rem;
+  }
+
+  .tela-pagamento {
+    padding: 20px;
+  }
+
+  .tela-pagamento h2 {
+    font-size: 1.5rem;
+  }
+
+  .campo-comentario textarea {
+    width: 100%;
+  }
 }

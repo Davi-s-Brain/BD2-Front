@@ -331,4 +331,14 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   });
+
+  const botaoMenu = document.getElementById("botao-menu");
+  const menulateral = document.querySelector(".menu-lateral");
+
+  if (botaoMenu && menulateral) {
+    botaoMenu.addEventListener("click", () => {
+      menulateral.classList.toggle("ativo");
+    });
+  }
+
 });
