@@ -99,6 +99,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  // ADIÇÃO: escutar o clique no botão "Confirmar Pagamento"
+  const botaoConfirmarPag = document.getElementById("botao-confirma-pag");
+  if (botaoConfirmarPag) {
+    botaoConfirmarPag.addEventListener("click", () => {
+      finalizarPagamento(); // chama a função já existente
+    });
+  }
+
   // Função para recomeçar o pedido
   window.recomecarPedido = function () {
     if (telaConfirmacao) {
@@ -279,5 +287,48 @@ document.addEventListener("DOMContentLoaded", function () {
         atualizarResumoPagamento();
       }
     }
+  });
+
+  // Função de busca por nome do produto e filtro por tags
+  const secoes = document.querySelectorAll(".lista-produtos");
+
+  secoes.forEach(secao => {
+    const campoBusca = secao.querySelector(".campo-busca");
+    const filtros = secao.querySelectorAll(".filtro-tag");
+    const produtos = secao.querySelectorAll(".produto");
+
+    let tagSelecionada = "";
+
+    function filtrar() {
+      const termo = campoBusca.value.toLowerCase();
+
+      produtos.forEach(produto => {
+        const titulo = produto.querySelector("h3").textContent.toLowerCase();
+        const tags = Array.from(produto.querySelectorAll(".tag")).map(tag =>
+          tag.dataset.tag?.toLowerCase()
+        );
+
+        const combinaBusca = titulo.includes(termo);
+        const combinaTag = tagSelecionada === "" || tags.includes(tagSelecionada);
+
+        produto.style.display = (combinaBusca && combinaTag) ? "block" : "none";
+      });
+    }
+
+    campoBusca.addEventListener("input", filtrar);
+
+    filtros.forEach(filtro => {
+      filtro.addEventListener("click", () => {
+        // Alternar classe ativa
+        filtros.forEach(f => f.classList.remove("ativo"));
+        if (filtro.dataset.tag === tagSelecionada) {
+          tagSelecionada = ""; // desfaz filtro
+        } else {
+          filtro.classList.add("ativo");
+          tagSelecionada = filtro.dataset.tag;
+        }
+        filtrar();
+      });
+    });
   });
 });

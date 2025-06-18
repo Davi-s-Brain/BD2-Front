@@ -123,6 +123,75 @@ body {
   margin-bottom: 15px;
 }
 
+/* Estilos do campo de busca das seções de produtos */
+.area-busca {
+  margin-bottom: 20px;
+  /* display: flex;
+  gap: 30px;
+  justify-content: space-between; */
+}
+
+.campo-com-icone {
+  position: relative;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.campo-busca {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.icone-lupa {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 18px;
+  color: #888;
+}
+
+.filtros-titulo {
+  font-size: 1.2em;
+  color: #e47911;
+}
+
+.filtro-opcao {
+  font-size: 1em;
+  color: #222;
+}
+
+.filtros-tags {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filtro-tag {
+  background-color: #ddd;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.filtro-tag:hover {
+  background-color: #adabab;
+}
+
+.filtro-tag.ativo {
+  background-color: #222;
+  color: white;
+}
+
+
 .produtos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -139,6 +208,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 240px; /* limite fixo para evitar que estique */
 }
 
 .produto:hover {
@@ -191,6 +262,11 @@ body {
 .tag.sem-lactose {
   background-color: #d1ecf1;
   color: #0c5460;
+}
+
+.tag.brinde {
+  background-color: #d642ffb6;
+  color: white;
 }
 
 .preco-e-botao {
@@ -368,7 +444,7 @@ body {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 97%;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -578,4 +654,64 @@ body {
   height: 2px;
   background-color: #eee;
   margin: 20px 0;
+}
+
+/* Tela de confirmação do pagamento e avaliação do pedido */
+.tela-confirmacao {
+  padding: 20px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  max-width: 500px;
+  margin: 2em auto 0 auto;
+  display: none;  /* Inicialmente escondida */
+}
+
+.campo-avaliacao {
+  margin: 20px 0;
+}
+
+.estrelas {
+  display: flex;
+  flex-direction: row-reverse; /* Inverte a ordem das estrelas visualmente */
+  justify-content: center; /* Centraliza as estrelas */
+  align-items: center;;
+}
+
+.estrelas input {
+  display: none;
+}
+
+.estrelas label {
+  font-size: 2rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.estrelas input:checked ~ label {
+  font-size: 3em;
+}
+
+.campo-comentario textarea {
+  width: 90%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+.btn-avaliar {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #ffa500;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-avaliar:hover {
+  background-color: #e59400;
 }
