@@ -332,13 +332,24 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // === RESPONSIVIDADE: BOTÃO QUE ABRE MENU LATERAL ===
   const botaoMenu = document.getElementById("botao-menu");
   const menulateral = document.querySelector(".menu-lateral");
+  const opcoesMenu = document.querySelectorAll(".menu-lateral .secao-menu");
 
   if (botaoMenu && menulateral) {
     botaoMenu.addEventListener("click", () => {
       menulateral.classList.toggle("ativo");
     });
   }
+
+  // Fecha o menu lateral ao clicar em uma opção (somente em telas pequenas)
+  opcoesMenu.forEach(opcao => {
+    opcao.addEventListener("click", () => {
+      if (window.innerWidth <= 768) {
+        menuLateral.classList.remove("ativo");
+      }
+    });
+  });
 
 });

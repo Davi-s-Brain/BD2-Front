@@ -120,3 +120,90 @@ body {
 .tabela-pedidos tbody tr:nth-child(odd) {
   background-color: #f5f5f5;
 }
+
+/* Seção de resumo do dia */
+.produtos-mais-pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.item-mais-pedido {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.item-mais-pedido strong {
+  flex: 1;
+  min-width: 120px;
+}
+
+.item-mais-pedido .quantidade {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+
+/* Responsividade */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  .menu-lateral {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    overflow-x: auto;
+    justify-content: space-around;
+  }
+
+  .menu-item {
+    padding: 10px;
+    font-size: 0.9rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;          /* impede overflow lateral */
+  }
+
+  .secao-conteudo{
+    margin: 0 20px;
+  }
+
+  .conteudo {
+    padding: 20px 10px;
+  }
+
+  .form-pedido {
+    max-width: 100%;
+    width: 90%;
+  }
+
+  .tabela-estoque,
+  .tabela-pedidos {
+    font-size: 0.9rem;
+    overflow-x: auto;
+  }
+
+  .tabela-wrapper {
+    overflow-x: auto;
+  }
+
+  .tabela-pedidos th,
+  .tabela-pedidos td,
+  .tabela-estoque th,
+  .tabela-estoque td {
+    padding: 0.5rem;
+  }
+
+  #lista-pedido li {
+    font-size: 0.9rem;
+  }
+}

@@ -8,7 +8,7 @@ body, button {
 }
 
 body {
-  margin: 0 0 60px 0;
+  margin: 0 0 100px 0;
   padding: 0;
   background-color: #f0f0f0;
   display: flex;
@@ -58,16 +58,6 @@ body {
   color: #555;
 }
 
-.promocoes .banner-promocional {
-  background-color: #fff;
-  color: #e47911;
-  /* Outra cor presente */
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-size: 0.8em;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
 .promocoes button {
   background: none;
   border: 1px solid #e47911;
@@ -90,7 +80,7 @@ body {
   padding-top: 80px;
   /* Para não sobrepor com o cabeçalho fixo */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-  height: 100vh;
+  height: auto;
   overflow-y: auto;
 }
 
@@ -117,15 +107,11 @@ body {
 }
 
 .banner-principal {
-  margin-bottom: 20px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  height: 300px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  width: 100%;
+  height: auto;
   display: block;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .lista-produtos h2 {
@@ -170,6 +156,11 @@ body {
   color: #e47911;
 }
 
+.filtro-opcoes {
+  display: flex;
+  gap: 10px;
+}
+
 .filtro-opcao {
   font-size: 1em;
   color: #222;
@@ -200,7 +191,6 @@ body {
   background-color: #222;
   color: white;
 }
-
 
 .produtos-grid {
   display: grid;
@@ -729,27 +719,6 @@ body {
 /* Responsividade */
 /* === RESPONSIVIDADE GERAL === */
 @media (max-width: 1024px) {
-  .menu-lateral {
-    width: 220px;
-    min-width: unset;
-  }
-
-  .cabecalho {
-    gap: 400px;
-  }
-
-  .produtos-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .cabecalho {
-    flex-direction: row;
-    gap: 5em;
-    text-align: center;
-  }
-
   .botao-menu-mobile {
     display: block;
     position: absolute;
@@ -775,6 +744,28 @@ body {
     height: auto;
   }
 
+  .cabecalho {
+    gap: 400px;
+  }
+
+  .produtos-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .cabecalho {
+    flex-direction: row;
+    gap: 5em;
+    text-align: center;
+  }
+
+  .menu-lateral.ativo {
+    display: flex;
+    width: 60%;
+    height: auto;
+  } 
+
   .secao-menu {
     flex: 1;
     text-align: center;
@@ -793,8 +784,7 @@ body {
 
   .filtros-tags {
     flex-wrap: wrap;
-    flex-direction: row;
-    gap: 10px;
+    gap: 20px;
   }
 
   .produto {
@@ -827,6 +817,18 @@ body {
 
   .icone-lupa {
     font-size: 16px;
+  }
+
+  .filtro-opcoes {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .filtro-tag {
+    width: 10%;
+    text-align: center;
   }
 
   .produto h3 {

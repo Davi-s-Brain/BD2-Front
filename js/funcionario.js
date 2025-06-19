@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+  
   // abre aba inicial
   menuItems[0].click();
 

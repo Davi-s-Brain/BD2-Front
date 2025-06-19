@@ -7,12 +7,13 @@
     <link rel="icon" type="image/x-icon" href="../images/sanduichelindju.png" />
     <link rel="stylesheet" href="../css/style.css" />
   </head>
+  
   <body>
     <header class="cabecalho">
       <button id="botao-menu" class="botao-menu-mobile">☰</button>
 
       <div class="usuario">
-        <span id="saudacao" class="saudacao">Olá, [NOME]!</span>
+        <span id="saudacao" class="saudacao">Oi, [NOME]!</span>
       </div>
 
       <div class="logo">
@@ -22,7 +23,6 @@
           style="height: 50px"
         />
       </div>
-      
     </header>
 
     <aside class="menu-lateral">
@@ -65,22 +65,27 @@
 
           <div class="filtros-tags">
             <span class="filtros-titulo">Filtrar</span>
-            <div>
+            <div class="filtro-opcoes">
               <span class="filtro-opcao">Tipo de carne:</span>
-              <span class="filtro-tag" data-tag="peru">Peru</span>
-              <span class="filtro-tag" data-tag="frango">Frango</span>
-              <span class="filtro-tag" data-tag="bovino">Bovino</span>
-              <span class="filtro-tag" data-tag="suíno">Suíno</span>
-              <span class="filtro-tag" data-tag="peixe">Peixe</span>
+              <div>
+                <span class="filtro-tag" data-tag="peru">Peru</span>
+                <span class="filtro-tag" data-tag="frango">Frango</span>
+                <span class="filtro-tag" data-tag="bovino">Bovino</span>
+                <span class="filtro-tag" data-tag="suíno">Suíno</span>
+                <span class="filtro-tag" data-tag="peixe">Peixe</span>
+              </div>
+            </div>
 
-            </div>
-            <div>
+            <div class="filtro-opcoes">
               <span class="filtro-opcao">Restrições:</span>
-              <span class="filtro-tag" data-tag="sem glúten">Sem Glúten</span>
-              <span class="filtro-tag" data-tag="sem lactose">Sem Lactose</span>
-              <span class="filtro-tag" data-tag="vegano">Vegano</span>
+              <div>
+                <span class="filtro-tag" data-tag="sem glúten">Sem Glúten</span>
+                <span class="filtro-tag" data-tag="sem lactose">Sem Lactose</span>
+                <span class="filtro-tag" data-tag="vegano">Vegano</span>
+              </div>
             </div>
-            <div>
+
+            <div class="filtro-opcoes">
               <span class="filtro-opcao">Brinde:</span>
               <span class="filtro-tag" data-tag="brinde">Sim</span>
             </div>

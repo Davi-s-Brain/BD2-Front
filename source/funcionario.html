@@ -7,12 +7,14 @@
   <link rel="icon" type="image/x-icon" href="../images/sanduichelindju.png">
   <link rel="stylesheet" href="../css/funcionario.css" />
 </head>
+
 <body>
   <div class="menu-lateral">
-    <div class="menu-item ativo" data-secao="registrar">Registrar Pedido</div>
-    <div class="menu-item" data-secao="estoque">Ver Estoque</div>
-    <div class="menu-item" data-secao="consultar">Consultar Pedidos</div>
-    <div class="menu-item" data-secao="sair">Sair</div>
+    <div class="menu-item ativo" data-secao="registrar">📝 Registrar Pedido</div>
+    <div class="menu-item" data-secao="estoque">📦 Ver Estoque</div>
+    <div class="menu-item" data-secao="consultar">🔍 Consultar Pedidos</div>
+    <div class="menu-item" data-secao="resumo">📊 Resumo do dia</div>
+    <div class="menu-item" data-secao="sair">🚪 Sair</div>
   </div>
 
   <div class="conteudo">
@@ -60,10 +62,6 @@
       </table>
     </section>
 
-    <section id="sair-secao" class="secao-conteudo" style="display: none;">
-      <p>Você saiu com sucesso.</p>
-    </section>
-
     <section id="consultar-secao" class="secao-conteudo" style="display: none;">
       <h2>Consultar Pedidos</h2>
       <div class="tabela-wrapper">
@@ -81,6 +79,44 @@
         </table>
       </div>
     </section>
+
+    <section id="resumo-secao" class="secao-conteudo" style="display: none;">
+      <h2>Resumo do Dia</h2>
+
+      <div class="resumo-dia">
+        <p><strong>Lucro total:</strong> R$ <span id="lucro-dia">0,00</span></p>
+
+        <h3>Mais pedidos:</h3>
+        <div class="produtos-mais-pedidos">
+        <div class="item-mais-pedido">
+          <strong>🥪 Sanduíche:</strong>
+          <span id="mais-sanduiche-nome">--</span>
+          <span class="quantidade" id="mais-sanduiche-qtd">0 pedidos</span>
+        </div>
+        <div class="item-mais-pedido">
+          <strong>🍟 Acompanhamento:</strong>
+          <span id="mais-acompanhamento-nome">--</span>
+          <span class="quantidade" id="mais-acompanhamento-qtd">0 pedidos</span>
+        </div>
+        <div class="item-mais-pedido">
+          <strong>🍦 Sobremesa:</strong>
+          <span id="mais-sobremesa-nome">--</span>
+          <span class="quantidade" id="mais-sobremesa-qtd">0 pedidos</span>
+        </div>
+        <div class="item-mais-pedido">
+          <strong>🥤 Bebida:</strong>
+          <span id="mais-bebida-nome">--</span>
+          <span class="quantidade" id="mais-bebida-qtd">0 pedidos</span>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <section id="sair-secao" class="secao-conteudo" style="display: none;">
+      <p>Você saiu com sucesso.</p>
+    </section>
+
   </div>
 
   <script src="../js/funcionario.js"></script>
