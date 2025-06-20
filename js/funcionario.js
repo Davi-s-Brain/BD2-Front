@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const botaoAdicionar = document.getElementById("adicionar");
   let total = 0;
 
-
   // Gerencia troca de abas
   menuItems.forEach(item => {
     item.addEventListener("click", () => {
@@ -233,25 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("registrar-secao").appendChild(p);
     return p;
   }
-    const elementos = {
-        lucroDia: document.getElementById('lucro-dia'),
-        sanduiche: {
-            nome: document.getElementById('mais-sanduiche-nome'),
-            qtd: document.getElementById('mais-sanduiche-qtd')
-        },
-        acompanhamento: {
-            nome: document.getElementById('mais-acompanhamento-nome'),
-            qtd: document.getElementById('mais-acompanhamento-qtd')
-        },
-        sobremesa: {
-            nome: document.getElementById('mais-sobremesa-nome'),
-            qtd: document.getElementById('mais-sobremesa-qtd')
-        },
-        bebida: {
-            nome: document.getElementById('mais-bebida-nome'),
-            qtd: document.getElementById('mais-bebida-qtd')
-        }
-    };
+    const elementoTotal = document.getElementById('lucro-dia');
 
     // Função para formatar valores monetários com tratamento seguro
     function formatarMoeda(valor) {
@@ -267,10 +248,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return isNaN(numero) ? '0,00' : numero.toFixed(2).replace('.', ',');
     }
 
-    // Função para atualizar os dados do resumo
-    async function atualizarResumoDia() {
+    // Função para atualizar apenas o total
+    async function atualizarTotal() {
         try {
-            const response = await fetch('http:localhost:8080/integration/pedido/total-hoje');
+            const response = await fetch('http://localhost:8000/integration/pedido/total-hoje/');
 
             if (!response.ok) {
                 throw new Error(`Erro na requisição: ${response.status}`);
@@ -278,64 +259,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
 
-            // Verificação segura dos dados
-            if (!data) {
+            // Verificação básica dos dados
+            if (data === undefined || data.total === undefined) {
                 throw new Error('Dados inválidos retornados pela API');
             }
 
-            // Atualiza os valores na interface com fallbacks
-            elementos.lucroDia.textContent = formatarMoeda(data.total);
-
-            // Atualiza os itens mais vendidos com verificações
-            const maisVendidos = data.mais_vendidos || {};
-
-            elementos.sanduiche.nome.textContent =
-                maisVendidos.sanduiche?.nome || '--';
-            elementos.sanduiche.qtd.textContent =
-                `${maisVendidos.sanduiche?.quantidade || 0} pedidos`;
-
-            elementos.acompanhamento.nome.textContent =
-                maisVendidos.acompanhamento?.nome || '--';
-            elementos.acompanhamento.qtd.textContent =
-                `${maisVendidos.acompanhamento?.quantidade || 0} pedidos`;
-
-            elementos.sobremesa.nome.textContent =
-                maisVendidos.sobremesa?.nome || '--';
-            elementos.sobremesa.qtd.textContent =
-                `${maisVendidos.sobremesa?.quantidade || 0} pedidos`;
-
-            elementos.bebida.nome.textContent =
-                maisVendidos.bebida?.nome || '--';
-            elementos.bebida.qtd.textContent =
-                `${maisVendidos.bebida?.quantidade || 0} pedidos`;
+            // Atualiza apenas o valor total
+            elementoTotal.textContent = formatarMoeda(data.total);
 
         } catch (error) {
-            console.error('Erro ao atualizar resumo:', error);
-
-            // Define valores padrão em caso de erro
-            elementos.lucroDia.textContent = '0,00';
-
-            elementos.sanduiche.nome.textContent = '--';
-            elementos.sanduiche.qtd.textContent = '0 pedidos';
-
-            elementos.acompanhamento.nome.textContent = '--';
-            elementos.acompanhamento.qtd.textContent = '0 pedidos';
-
-            elementos.sobremesa.nome.textContent = '--';
-            elementos.sobremesa.qtd.textContent = '0 pedidos';
-
-            elementos.bebida.nome.textContent = '--';
-            elementos.bebida.qtd.textContent = '0 pedidos';
+            console.error('Erro ao atualizar total:', error);
+            elementoTotal.textContent = '0,00'; // Valor padrão em caso de erro
         }
     }
 
     // Configura a atualização automática
     function iniciarAtualizacao() {
         // Atualiza imediatamente ao carregar
-        atualizarResumoDia();
+        atualizarTotal();
 
         // Configura o intervalo para atualização automática (30 segundos)
-        setInterval(atualizarResumoDia, 30000);
+        setInterval(atualizarTotal, 30000);
     }
 
     // Inicia o sistema
