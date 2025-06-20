@@ -16,13 +16,12 @@ async function validarToken() {
     window.location.href = "login.html";
     return;
   }
-  localStorage.removeItem("token");
-
 }
 
-validarToken();
+
 
 document.addEventListener("DOMContentLoaded", () => {
+   validarToken();
   // Carrega lista de produtos no select ao iniciar
   carregarProdutos();
 
@@ -36,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalSpan     = document.getElementById("total");
   const botaoAdicionar = document.getElementById("adicionar");
   let total = 0;
+
 
   // Gerencia troca de abas
   menuItems.forEach(item => {
@@ -233,4 +233,111 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("registrar-secao").appendChild(p);
     return p;
   }
+    const elementos = {
+        lucroDia: document.getElementById('lucro-dia'),
+        sanduiche: {
+            nome: document.getElementById('mais-sanduiche-nome'),
+            qtd: document.getElementById('mais-sanduiche-qtd')
+        },
+        acompanhamento: {
+            nome: document.getElementById('mais-acompanhamento-nome'),
+            qtd: document.getElementById('mais-acompanhamento-qtd')
+        },
+        sobremesa: {
+            nome: document.getElementById('mais-sobremesa-nome'),
+            qtd: document.getElementById('mais-sobremesa-qtd')
+        },
+        bebida: {
+            nome: document.getElementById('mais-bebida-nome'),
+            qtd: document.getElementById('mais-bebida-qtd')
+        }
+    };
+
+    // Função para formatar valores monetários com tratamento seguro
+    function formatarMoeda(valor) {
+        if (valor === undefined || valor === null) {
+            return '0,00';
+        }
+
+        // Converte para número se for string
+        const numero = typeof valor === 'string' ?
+            parseFloat(valor.replace('R$', '').trim()) :
+            Number(valor);
+
+        return isNaN(numero) ? '0,00' : numero.toFixed(2).replace('.', ',');
+    }
+
+    // Função para atualizar os dados do resumo
+    async function atualizarResumoDia() {
+        try {
+            const response = await fetch('http:localhost:8080/integration/pedido/total-hoje');
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Verificação segura dos dados
+            if (!data) {
+                throw new Error('Dados inválidos retornados pela API');
+            }
+
+            // Atualiza os valores na interface com fallbacks
+            elementos.lucroDia.textContent = formatarMoeda(data.total);
+
+            // Atualiza os itens mais vendidos com verificações
+            const maisVendidos = data.mais_vendidos || {};
+
+            elementos.sanduiche.nome.textContent =
+                maisVendidos.sanduiche?.nome || '--';
+            elementos.sanduiche.qtd.textContent =
+                `${maisVendidos.sanduiche?.quantidade || 0} pedidos`;
+
+            elementos.acompanhamento.nome.textContent =
+                maisVendidos.acompanhamento?.nome || '--';
+            elementos.acompanhamento.qtd.textContent =
+                `${maisVendidos.acompanhamento?.quantidade || 0} pedidos`;
+
+            elementos.sobremesa.nome.textContent =
+                maisVendidos.sobremesa?.nome || '--';
+            elementos.sobremesa.qtd.textContent =
+                `${maisVendidos.sobremesa?.quantidade || 0} pedidos`;
+
+            elementos.bebida.nome.textContent =
+                maisVendidos.bebida?.nome || '--';
+            elementos.bebida.qtd.textContent =
+                `${maisVendidos.bebida?.quantidade || 0} pedidos`;
+
+        } catch (error) {
+            console.error('Erro ao atualizar resumo:', error);
+
+            // Define valores padrão em caso de erro
+            elementos.lucroDia.textContent = '0,00';
+
+            elementos.sanduiche.nome.textContent = '--';
+            elementos.sanduiche.qtd.textContent = '0 pedidos';
+
+            elementos.acompanhamento.nome.textContent = '--';
+            elementos.acompanhamento.qtd.textContent = '0 pedidos';
+
+            elementos.sobremesa.nome.textContent = '--';
+            elementos.sobremesa.qtd.textContent = '0 pedidos';
+
+            elementos.bebida.nome.textContent = '--';
+            elementos.bebida.qtd.textContent = '0 pedidos';
+        }
+    }
+
+    // Configura a atualização automática
+    function iniciarAtualizacao() {
+        // Atualiza imediatamente ao carregar
+        atualizarResumoDia();
+
+        // Configura o intervalo para atualização automática (30 segundos)
+        setInterval(atualizarResumoDia, 30000);
+    }
+
+    // Inicia o sistema
+    iniciarAtualizacao();
 });
