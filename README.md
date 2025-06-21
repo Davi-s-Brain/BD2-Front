@@ -90,7 +90,7 @@ BD2-Front/
 - Este é um projeto puramente front-end, sem persistência de dados
 
 ## 👥 Autores
-- Catarina Macedo Scabelli
+- Catarina Macedo Scabelli - 14215555
 - Davi Batista de Souza - 14565900
 - Geovanny Luan Piedade - 14573909
 - Rafaella Scarel Caminaga - 14108228
