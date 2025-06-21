@@ -12,15 +12,26 @@
     <canvas id="background"></canvas>
     <div class="login-container">
       <h2 id = "login">Login</h2>
-      <input type="text" id="username" name="username" placeholder="Usuário" required />
       <input type="text" id="id" name="id" placeholder="id" />
 
+      <input type="text" id="first-name" name="first-name" placeholder="Primeiro nome" required />
+      <input type="text" id="last-name" name="last-name" placeholder="Último nome" required />
+      <input type="date" id="birth-date" name="birth-date" placeholder="Data de nascimento" required />
+      <input type="text" id="cpf" name="cpf" placeholder="CPF" required />
+      <input type="text" id="cellphone" name="cellphone" placeholder="Telefone" required />
+      <input type="email" id="email" name="email" placeholder="E-mail" required />
+      <input type="date" id="date" name="date" placeholder="Data do cadastro" required />
+      <input type="text" id="gender" name="gender" placeholder="Gênero" required />
       <input type="password" id="password" name="password" placeholder="Senha" required />
+      <input type="text" id="lactose" name="lactose" placeholder="É intolerante à lactose?" required />
+      <input type="text" id="celiaco" name="celiaco" placeholder="É celíaco(a)?" required />
+      <input type="text" id="vegetariano" name="vegetariano" placeholder="É vegetariano(a)?" required />
+      <input type="text" id="vegano" name="vegano" placeholder="É vegano(a)?" required />
+
       <button id="loginBtn" type="button">Entrar</button>
       <div id="error-msg" style="color: red; margin-top: 10px;"></div>
       <a id = "registerBtn">Cadastre-se</a>
       <a id = "funcBtn">Funcionario</a>
-
     </div>
 
     <script src="../js/login.js"></script>
