@@ -59,30 +59,56 @@ window.addEventListener("resize", () => {
 });
 document.addEventListener('DOMContentLoaded', () => {
   const API_BASE      = 'http://localhost:8000';
-  const loginBtn      = document.getElementById('loginBtn');
   const funcBtn       = document.getElementById('funcBtn');
   const usernameInput = document.getElementById('username');
   const passwordInput = document.getElementById('password');
   const idInput       = document.getElementById('id');
   const errorMsg      = document.getElementById('error-msg');
+  const registerBtn   = document.getElementById('registerBtn');
+  const titulo        = document.getElementById("titulo-login");
+  const camposCadastro = document.getElementById("campos-cadastro");
+  const camposLogin    = document.getElementById("campos-login");
+  const camposFuncionario = document.getElementById("campos-funcionario");
+  const botaoLogin     = document.getElementById("loginBtn");
+
 
   let isFuncionarioMode = false;
 
   // Estado inicial
-  funcBtn.textContent = 'Funcionário';
-  idInput.style.display = 'none';
-  errorMsg.textContent = '';
+  // funcBtn.textContent = 'Funcionário';
+  // idInput.style.display = 'none';
+  // errorMsg.textContent = '';
 
   // Toggle de modo: Funcionário <-> Voltar
-  funcBtn.addEventListener('click', () => {
+  funcBtn.addEventListener('click', function () {
     isFuncionarioMode = !isFuncionarioMode;
-    idInput.style.display = isFuncionarioMode ? 'block' : 'none';
-    funcBtn.textContent = isFuncionarioMode ? 'Voltar' : 'Funcionário';
+
+    if (isFuncionarioMode) {
+      // Ativa modo funcionário
+      camposLogin.style.display = "none";
+      camposCadastro.style.display = "none";
+      camposFuncionario.style.display = "block";
+      registerBtn.style.display = "none";
+      titulo.textContent = "Login do Funcionário";
+      botaoLogin.textContent = "Entrar";
+      funcBtn.textContent = "Voltar";
+    } else {
+      // Volta para modo login normal
+      camposLogin.style.display = "block";
+      camposCadastro.style.display = "none";
+      camposFuncionario.style.display = "none";
+      registerBtn.style.display = "block"; // ou 'block' se preferir
+      titulo.textContent = "Login";
+      botaoLogin.textContent = "Entrar";
+      funcBtn.textContent = "Funcionário";
+    }
+
     errorMsg.textContent = '';
-  });
+});
+
 
   // Handler do botão Entrar
-  loginBtn.addEventListener('click', async () => {
+  botaoLogin.addEventListener('click', async () => {
     errorMsg.textContent = '';
 
     const username = usernameInput.value.trim();
@@ -148,13 +174,30 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = './index.html';
   });
 
-  const registerBtn = document.getElementById('registerBtn');
-  if (registerBtn) {
-    registerBtn.addEventListener('click', e => {
-      e.preventDefault();  // evita recarregar a página
-      register();
-    });
+  let modoCadastro = false; // flag para controlar o estado
+
+
+registerBtn.addEventListener("click", function (e) {
+  e.preventDefault(); // evita redirecionamento
+
+  if (!modoCadastro) {
+    // Ativa modo de cadastro
+    modoCadastro = true;
+    titulo.textContent = "Cadastro";
+    camposCadastro.style.display = "block";
+    this.textContent = "Voltar ao login";
+    botaoLogin.textContent = "Cadastrar";
+  } else {
+    // Se já estiver no modo de cadastro, então envia o cadastro
+    register(); // sua função de cadastro
+    modoCadastro = false;
+    titulo.textContent = "Login";
+    camposCadastro.style.display = "none";
+    registerBtn.textContent = "Cadastre-se";
+    botaoLogin.textContent = "Entrar";
   }
+});
+
 });
 
 async function register() {
