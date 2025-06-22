@@ -11,17 +11,44 @@
   <body>
     <canvas id="background"></canvas>
     <div class="login-container">
-      <h2 id = "login">Login</h2>
-      <input type="text" id="username" name="username" placeholder="Usuário" required />
-      <input type="text" id="id" name="id" placeholder="id" />
+      <h2 id="titulo-login">Login</h2>
 
-      <input type="password" id="password" name="password" placeholder="Senha" required />
-      <button id="loginBtn" type="button">Entrar</button>
+      <!-- Campos extras escondidos inicialmente -->
+      <div id="campos-cadastro" style="display: none;">
+        <!-- <input type="text" id="id" name="id" placeholder="ID" /> -->
+
+        <input type="text" id="first-name" name="first-name" placeholder="Primeiro nome" required />
+        <input type="text" id="last-name" name="last-name" placeholder="Último nome" required />
+        <input type="text" id="birth-date" name="birth-date" placeholder="Data de nascimento" required />
+        <input type="text" id="cpf" name="cpf" placeholder="CPF" required />
+        <input type="text" id="cellphone" name="cellphone" placeholder="Telefone" required />
+        <input type="text" id="date" name="date" placeholder="Data do cadastro" required />
+        <input type="text" id="gender" name="gender" placeholder="Gênero" required />
+        <input type="text" id="lactose" name="lactose" placeholder="É intolerante à lactose?" required />
+        <input type="text" id="celiaco" name="celiaco" placeholder="É celíaco(a)?" required />
+        <input type="text" id="vegetariano" name="vegetariano" placeholder="É vegetariano(a)?" required />
+        <input type="text" id="vegano" name="vegano" placeholder="É vegano(a)?" required />
+      </div>
+
+      <!-- Apenas email e senha visíveis inicialmente -->
+      <div id="campos-login">
+        <input type="text" id="email" name="email" placeholder="E-mail" required />
+        <input type="password" id="password" name="password" placeholder="Senha" required />
+      </div>
+
+      <!-- Campos de funcionário (ID + senha) -->
+      <div id="campos-funcionario" style="display: none;">
+        <input type="text" id="id" placeholder="id" />
+        <input type="password" id="password" placeholder="Senha" />
+      </div>
+
       <div id="error-msg" style="color: red; margin-top: 10px;"></div>
-      <a id = "registerBtn">Cadastre-se</a>
-      <a id = "funcBtn">Funcionario</a>
 
+      <button id="loginBtn" type="button">Entrar</button>
+      <a id="registerBtn" href="#">Cadastre-se</a>
+      <a id="funcBtn" href="#">Funcionário</a>
     </div>
+
 
     <script src="../js/login.js"></script>
   </body>
