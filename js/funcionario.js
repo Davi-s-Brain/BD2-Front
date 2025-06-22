@@ -16,13 +16,12 @@ async function validarToken() {
     window.location.href = "login.html";
     return;
   }
-  localStorage.removeItem("token");
-
 }
 
-validarToken();
+
 
 document.addEventListener("DOMContentLoaded", () => {
+   validarToken();
   // Carrega lista de produtos no select ao iniciar
   carregarProdutos();
 
@@ -233,4 +232,56 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("registrar-secao").appendChild(p);
     return p;
   }
+    const elementoTotal = document.getElementById('lucro-dia');
+
+    // Função para formatar valores monetários com tratamento seguro
+    function formatarMoeda(valor) {
+        if (valor === undefined || valor === null) {
+            return '0,00';
+        }
+
+        // Converte para número se for string
+        const numero = typeof valor === 'string' ?
+            parseFloat(valor.replace('R$', '').trim()) :
+            Number(valor);
+
+        return isNaN(numero) ? '0,00' : numero.toFixed(2).replace('.', ',');
+    }
+
+    // Função para atualizar apenas o total
+    async function atualizarTotal() {
+        try {
+            const response = await fetch('http://localhost:8000/integration/pedido/total-hoje/');
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Verificação básica dos dados
+            if (data === undefined || data.total === undefined) {
+                throw new Error('Dados inválidos retornados pela API');
+            }
+
+            // Atualiza apenas o valor total
+            elementoTotal.textContent = formatarMoeda(data.total);
+
+        } catch (error) {
+            console.error('Erro ao atualizar total:', error);
+            elementoTotal.textContent = '0,00'; // Valor padrão em caso de erro
+        }
+    }
+
+    // Configura a atualização automática
+    function iniciarAtualizacao() {
+        // Atualiza imediatamente ao carregar
+        atualizarTotal();
+
+        // Configura o intervalo para atualização automática (30 segundos)
+        setInterval(atualizarTotal, 30000);
+    }
+
+    // Inicia o sistema
+    iniciarAtualizacao();
 });
