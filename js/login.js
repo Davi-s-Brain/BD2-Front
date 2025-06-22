@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   funcBtn.addEventListener('click', () => {
     isFuncionarioMode = !isFuncionarioMode;
     idInput.style.display = isFuncionarioMode ? 'block' : 'none';
+    usernameInput.style.display = isFuncionarioMode ? 'none' : 'block';
     funcBtn.textContent = isFuncionarioMode ? 'Voltar' : 'Funcionário';
     errorMsg.textContent = '';
   });
@@ -94,24 +95,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let token;
     // 1) Login normal
-    try {
-      const resp = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      if (!resp.ok) {
-        errorMsg.textContent = resp.status === 429
-          ? 'Muitas tentativas. Tente mais tarde.'
-          : 'Usuário ou senha inválidos.';
+    if(!isFuncionarioMode){
+      try {
+        const resp = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (!resp.ok) {
+          errorMsg.textContent = resp.status === 429
+            ? 'Muitas tentativas. Tente mais tarde.'
+            : 'Usuário ou senha inválidos.';
+          return;
+        }
+
+        const data = await resp.json();
+        token = data.access_token;
+        window.location.href = './index.html';
+        return;
+      } catch {
+        errorMsg.textContent = 'Erro de conexão ao fazer login.';
         return;
       }
-      const data = await resp.json();
-      token = data.access_token;
-      localStorage.setItem('token', token);
-    } catch {
-      errorMsg.textContent = 'Erro de conexão no login.';
-      return;
     }
 
     // 2) Se estiver em modo funcionário, faz a verificação extra
@@ -121,31 +127,36 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMsg.textContent = 'Informe o ID do funcionário.';
         return;
       }
+
       try {
-        const respF = await fetch(`${API_BASE}/funcionarios/${idValue}`, {
+        const password = passwordInput.value.trim(); // Certifique-se de que passwordInput está definido
+        const resp = await fetch(`${API_BASE}/auth/${idValue}?password=${encodeURIComponent(password)}`, {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
+          headers: { 'Content-Type': 'application/json' }
         });
-        if (!respF.ok) {
-          errorMsg.textContent = respF.status === 404
-            ? 'Funcionário não encontrado.'
-            : 'Erro ao buscar funcionário.';
+
+        if (!resp.ok) {
+          errorMsg.textContent = resp.status === 429
+            ? 'Muitas tentativas. Tente mais tarde.'
+            : 'ID ou senha inválidos.';
           return;
         }
-        // ambos deram certo: redireciona para página de funcionário
-        window.location.href = './funcionario.html';
-        return;
-      } catch {
-        errorMsg.textContent = 'Erro de conexão ao buscar funcionário.';
+
+        const data = await resp.json();
+        token = data.access_token;
+        localStorage.setItem('token', token);
+
+      } catch (error) {
+        console.error(error);
+        errorMsg.textContent = 'Erro de conexão no login.';
         return;
       }
+      window.location.href = './funcionario.html';
     }
 
+
+
     // modo normal: redireciona para tela principal
-    window.location.href = './index.html';
   });
 
   const registerBtn = document.getElementById('registerBtn');
@@ -199,7 +210,27 @@ async function register() {
     messageDiv.textContent = "Erro na conexão, tente novamente.";
   }
 }
-
+async function fazerLogin(user) {
+    try {
+      const resp = await fetch(`${API_BASE}/auth/${user}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({user, password })
+      });
+      if (!resp.ok) {
+        errorMsg.textContent = resp.status === 429
+          ? 'Muitas tentativas. Tente mais tarde.'
+          : 'Usuário ou senha inválidos.';
+        return true;
+      }
+      const data = await resp.json();
+      token = data.access_token;
+      localStorage.setItem('token', token);
+    } catch {
+      errorMsg.textContent = 'Erro de conexão no login.';
+      return false;
+    }
+}
 // Função para criar a div de mensagem se não existir ainda
 function createMessageDiv(type) {
   const container = document.querySelector('.login-container');

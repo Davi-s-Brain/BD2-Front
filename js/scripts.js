@@ -52,6 +52,76 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // === SERVIÇO DE CARRINHO ===
+  const carrinhoService = {
+    async obterCarrinho() {
+      try {
+        const response = await fetch('http://localhost:8000/carrinho/', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (!response.ok) throw new Error('Erro ao obter carrinho');
+        return await response.json();
+      } catch (error) {
+        console.error('Erro ao obter carrinho:', error);
+        return { itens: [] };
+      }
+    },
+
+    async adicionarItem(item) {
+      try {
+        const response = await fetch(`http://localhost:8000/carrinho/item`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(item)
+        });
+        if (!response.ok) throw new Error('Erro ao adicionar item');
+        return await response.json();
+      } catch (error) {
+        console.error('Erro ao adicionar item:', error);
+        return null;
+      }
+    },
+
+    async removerItem(idItem) {
+      try {
+        const response = await fetch(`http://localhost:8000/carrinho/item/${idItem}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (!response.ok) throw new Error('Erro ao remover item');
+        return await response.json();
+      } catch (error) {
+        console.error('Erro ao remover item:', error);
+        return null;
+      }
+    }
+  };
+
+  // Inicializa o carrinho
+  let carrinho = [];
+  let valorTotal = 0;
+
+  // Busca o carrinho do servidor ao carregar
+  async function inicializarCarrinho() {
+    const carrinhoAPI = await carrinhoService.obterCarrinho();
+    carrinho = carrinhoAPI.itens || [];
+    
+    // Calcula o valor total
+    valorTotal = carrinho.reduce((total, item) => total + item.preco, 0);
+    
+    // Atualiza a interface
+    document.querySelector('.valor-total').textContent = `R$ ${valorTotal.toFixed(2)}`;
+    atualizarSacolaExpandida();
+    atualizarResumoPagamento();
+  }
+
   // === NOVAS FUNÇÕES DE PAGAMENTO ===
 
   const botaoPagamento = document.querySelector(".recomecar-pedido");
@@ -101,9 +171,50 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ADIÇÃO: escutar o clique no botão "Confirmar Pagamento"
   const botaoConfirmarPag = document.getElementById("botao-confirma-pag");
+  const totalPagar = document.getElementById("total-pagar");
+  
   if (botaoConfirmarPag) {
-    botaoConfirmarPag.addEventListener("click", () => {
-      finalizarPagamento(); // chama a função já existente
+    botaoConfirmarPag.addEventListener("click", async () => {
+      // Monta o pedido a partir dos dados atuais
+      const payload = {
+        Data_pedido: new Date().toISOString().slice(0, 10), // data atual yyyy-mm-dd
+        Hora_pedido: new Date().toLocaleTimeString("pt-BR", { hour12: false }), // hora atual HH:mm:ss
+        Valor_total_pedido: parseFloat(totalPagar.textContent.replace(/[^\d.,]/g, "").replace(",", ".")) || 0,
+        Forma_pagamento: document.querySelector('input[name="pagamento"]:checked')?.value || "Indefinido",
+        E_delivery: true, // ou false, conforme sua lógica
+        Observacao: "", // aqui você pode pegar de um campo de texto se tiver
+        Id_cliente: 1, // ajuste conforme seu sistema
+        Id_func: 1,    // ajuste conforme seu sistema
+        itens: carrinho  // Inclui todos os itens do carrinho
+      };
+  
+      try {
+        const response = await fetch("http://localhost:8000/integration/pedido/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(payload),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+  
+        const data = await response.json();
+        alert("Pedido criado com sucesso! ID: " + data);
+        
+        // Limpa o carrinho após sucesso
+        carrinho = [];
+        valorTotal = 0;
+        document.querySelector('.valor-total').textContent = `R$ 0.00`;
+        atualizarSacolaExpandida();
+        atualizarResumoPagamento();
+        
+      } catch (error) {
+        alert("Falha ao criar pedido: " + error.message);
+      }
     });
   }
 
@@ -194,35 +305,37 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Inicializa o carrinho
-  let carrinho = [];
-  let valorTotal = 0;
-
   // Adiciona evento de clique para todos os produtos
   document.querySelectorAll(".produto").forEach((produto) => {
-    produto.addEventListener("click", function () {
+    produto.addEventListener("click", async function () {
       const nome = this.querySelector("h3").textContent;
       const preco = parseFloat(
         this.querySelector(".preco").textContent.replace("R$", "").replace(",",".").trim()
       );
-      const imagem = this.querySelector("img").src; // Captura a URL da imagem
+      const imagem = this.querySelector("img").src;
+      const idItem = parseInt(this.dataset.id); // Certifique-se de adicionar data-id nos produtos
 
-      adicionarAoCarrinho(nome, preco, imagem);
+      // Adiciona ao carrinho local
+      carrinho.push({ id_item: idItem, nome, preco, imagem });
+      valorTotal += preco;
+
+      document.querySelector(
+        ".valor-total"
+      ).textContent = `R$ ${valorTotal.toFixed(2)}`;
+
+      atualizarSacolaExpandida();
+      atualizarResumoPagamento();
+      
+      // Sincroniza com o servidor
+      await carrinhoService.adicionarItem({
+        id_item: idItem,       // Note o underline (id_item em vez de idItem)
+        nome: nome,
+        preco: preco,
+        quantidade: 1,         // Valor padrão ou pegue de um seletor/state
+        observacoes: ""        // String vazia ou pegue de um campo de texto
+      });    
     });
   });
-
-  // Modifique a função adicionarAoCarrinho para incluir a imagem
-  function adicionarAoCarrinho(nome, preco, imagem) {
-    carrinho.push({ nome, preco, imagem });
-    valorTotal += preco;
-
-    document.querySelector(
-      ".valor-total"
-    ).textContent = `R$ ${valorTotal.toFixed(2)}`;
-
-    atualizarSacolaExpandida();
-    atualizarResumoPagamento();
-  }
 
   // Atualize a função atualizarSacolaExpandida para mostrar as imagens
   function atualizarSacolaExpandida() {
@@ -237,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Adiciona novos itens com imagens
     carrinho.forEach((item) => {
       const itemHTML = `
-        <div class="item-sacola">
+        <div class="item-sacola" data-id="${item.id_item}">
           <img src="${item.imagem}" alt="${item.nome}" class="imagem-produto">
           <div class="info-produto">
             <h3>${item.nome}</h3>
@@ -270,12 +383,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Adiciona funcionalidade para remover itens
-  document.addEventListener("click", function (e) {
+  document.addEventListener("click", async function (e) {
     if (e.target.classList.contains("remover-item")) {
       const itemSacola = e.target.closest(".item-sacola");
-      const nome = itemSacola.querySelector("h3").textContent;
-      const index = carrinho.findIndex((item) => item.nome === nome);
-
+      const idItem = parseInt(itemSacola.dataset.id);
+      
+      // Remove do carrinho local
+      const index = carrinho.findIndex(item => item.id_item === idItem);
       if (index > -1) {
         valorTotal -= carrinho[index].preco;
         carrinho.splice(index, 1);
@@ -286,6 +400,9 @@ document.addEventListener("DOMContentLoaded", function () {
         atualizarSacolaExpandida();
         atualizarResumoPagamento();
       }
+      
+      // Sincroniza com o servidor
+      await carrinhoService.removerItem(idItem);
     }
   });
 
@@ -352,4 +469,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // Inicializa o carrinho ao carregar a página
+  inicializarCarrinho();
 });
