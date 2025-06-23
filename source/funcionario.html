@@ -6,6 +6,116 @@
   <title>Painel do Funcionário</title>
   <link rel="icon" type="image/x-icon" href="../images/sanduichelindju.png">
   <link rel="stylesheet" href="../css/funcionario.css" />
+  <style>
+    /* Estilos adicionais para os novos campos */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 5px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #observacao-pedido {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    /* Melhorias no dashboard */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .dashboard-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .categorias-container {
+      margin-top: 15px;
+    }
+
+    .categoria-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .categoria-info {
+      display: flex;
+      justify-content: space-between;
+      width: 180px;
+      min-width: 180px;
+    }
+
+    .categoria-nome {
+      font-weight: 500;
+      color: #34495e;
+    }
+
+    .categoria-valor {
+      font-weight: bold;
+      color: #2c3e50;
+      text-align: right;
+      min-width: 30px;
+    }
+
+    .categoria-bar-container {
+      flex-grow: 1;
+      height: 20px;
+      background: #ecf0f1;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .categoria-bar {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    /* Cores específicas para cada barra */
+    #bar-lancamento { background-color: #e74c3c; }
+    #bar-acompanhamento { background-color: #3498db; }
+    #bar-sobremesa { background-color: #9b59b6; }
+    #bar-bebida { background-color: #f1c40f; }
+    #bar-outros { background-color: #2ecc71; }
+
+    .destaque-item {
+      margin: 15px 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+    }
+
+    .destaque-item strong {
+      color: #2c3e50;
+    }
+  </style>
 </head>
 
 <body>
@@ -38,6 +148,25 @@
         <button id="adicionar">Adicionar</button>
       </div>
 
+      <!-- Campos adicionados para forma de pagamento, delivery e observações -->
+      <div class="form-group">
+        <label>Forma de Pagamento:</label>
+        <div class="radio-group">
+          <label><input type="radio" name="forma-pagamento" value="Dinheiro" checked> Dinheiro</label>
+          <label><input type="radio" name="forma-pagamento" value="Cartão"> Cartão</label>
+          <label><input type="radio" name="forma-pagamento" value="PIX"> PIX</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><input type="checkbox" id="check-delivery"> É delivery?</label>
+      </div>
+
+      <div class="form-group">
+        <label for="observacao-pedido">Observações:</label>
+        <textarea id="observacao-pedido" rows="2"></textarea>
+      </div>
+
       <h3>Itens do Pedido</h3>
       <ul id="lista-pedido"></ul>
 
@@ -53,6 +182,8 @@
             <th>Produto</th>
             <th>Categoria</th>
             <th>Em Estoque</th>
+            <th>Peso</th>
+            <th>Preço</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -64,13 +195,24 @@
 
     <section id="consultar-secao" class="secao-conteudo" style="display: none;">
       <h2>Consultar Pedidos</h2>
+      <div class="filtros-pedidos">
+        <label for="filtro-data">Filtrar por data:</label>
+        <input type="date" id="filtro-data">
+        <button id="btn-filtrar">Filtrar</button>
+        <button id="btn-limpar-filtro">Limpar filtro</button>
+      </div>
       <div class="tabela-wrapper">
         <table class="tabela-pedidos">
           <thead>
             <tr>
-              <th>Cliente</th>
-              <th>Produto</th>
-              <th>Quantidade</th>
+              <th>ID Pedido</th>
+              <th>Data</th>
+              <th>Hora</th>
+              <th>Valor Total</th>
+              <th>Pagamento</th>
+              <th>Delivery</th>
+              <th>ID Cliente</th>
+              <th>ID Funcionário</th>
             </tr>
           </thead>
           <tbody>
@@ -81,42 +223,108 @@
     </section>
 
     <section id="resumo-secao" class="secao-conteudo" style="display: none;">
-      <h2>Resumo do Dia</h2>
+      <h2>Dashboard do Dia</h2>
 
-      <div class="resumo-dia">
-        <p><strong>Lucro total:</strong> R$ <span id="lucro-dia">0,00</span></p>
+      <div class="dashboard-grid">
+        <!-- Cards de Resumo -->
+        <div class="dashboard-card total-pedidos">
+          <div class="card-icon">📊</div>
+          <div class="card-content">
+            <h3>Total de Pedidos</h3>
+            <p id="total-pedidos">0</p>
+          </div>
+        </div>
 
-        <h3>Mais pedidos:</h3>
-        <div class="produtos-mais-pedidos">
-        <div class="item-mais-pedido">
-          <strong>🥪 Sanduíche:</strong>
-          <span id="mais-sanduiche-nome">--</span>
-          <span class="quantidade" id="mais-sanduiche-qtd">0 pedidos</span>
+        <div class="dashboard-card lucro-total">
+          <div class="card-icon">💰</div>
+          <div class="card-content">
+            <h3>Lucro Total</h3>
+            <p>R$ <span id="lucro-dia">0,00</span></p>
+          </div>
         </div>
-        <div class="item-mais-pedido">
-          <strong>🍟 Acompanhamento:</strong>
-          <span id="mais-acompanhamento-nome">--</span>
-          <span class="quantidade" id="mais-acompanhamento-qtd">0 pedidos</span>
-        </div>
-        <div class="item-mais-pedido">
-          <strong>🍦 Sobremesa:</strong>
-          <span id="mais-sobremesa-nome">--</span>
-          <span class="quantidade" id="mais-sobremesa-qtd">0 pedidos</span>
-        </div>
-        <div class="item-mais-pedido">
-          <strong>🥤 Bebida:</strong>
-          <span id="mais-bebida-nome">--</span>
-          <span class="quantidade" id="mais-bebida-qtd">0 pedidos</span>
-        </div>
-      </div>
 
+        <div class="dashboard-card pedidos-delivery">
+          <div class="card-icon">🚚</div>
+          <div class="card-content">
+            <h3>Pedidos Delivery</h3>
+            <p id="total-delivery">0</p>
+          </div>
+        </div>
+
+        <!-- Gráfico de Categorias -->
+        <div class="dashboard-card grafico-categorias">
+          <h3>Vendas por Categoria</h3>
+          <div class="categorias-container">
+            <div class="categoria-row">
+              <div class="categoria-info">
+                <span class="categoria-nome">Lançamentos</span>
+                <span class="categoria-valor" id="value-lancamento">0</span>
+              </div>
+              <div class="categoria-bar-container">
+                <div class="categoria-bar" id="bar-lancamento" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="categoria-row">
+              <div class="categoria-info">
+                <span class="categoria-nome">Acompanhamentos</span>
+                <span class="categoria-valor" id="value-acompanhamento">0</span>
+              </div>
+              <div class="categoria-bar-container">
+                <div class="categoria-bar" id="bar-acompanhamento" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="categoria-row">
+              <div class="categoria-info">
+                <span class="categoria-nome">Sobremesas</span>
+                <span class="categoria-valor" id="value-sobremesa">0</span>
+              </div>
+              <div class="categoria-bar-container">
+                <div class="categoria-bar" id="bar-sobremesa" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="categoria-row">
+              <div class="categoria-info">
+                <span class="categoria-nome">Bebidas</span>
+                <span class="categoria-valor" id="value-bebida">0</span>
+              </div>
+              <div class="categoria-bar-container">
+                <div class="categoria-bar" id="bar-bebida" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="categoria-row">
+              <div class="categoria-info">
+                <span class="categoria-nome">Outros</span>
+                <span class="categoria-valor" id="value-outros">0</span>
+              </div>
+              <div class="categoria-bar-container">
+                <div class="categoria-bar" id="bar-outros" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seção de Destaques -->
+        <div class="dashboard-card destaques">
+          <h3>Destaques do Dia</h3>
+          <div class="destaque-item">
+            <span>Categoria Mais Vendida:</span>
+            <strong id="top-categoria">-</strong>
+          </div>
+          <div class="destaque-item">
+            <span>Ticket Médio:</span>
+            <strong id="ticket-medio">R$ 0,00</strong>
+          </div>
+        </div>
       </div>
     </section>
 
     <section id="sair-secao" class="secao-conteudo" style="display: none;">
       <p>Você saiu com sucesso.</p>
     </section>
-
   </div>
 
   <script src="../js/funcionario.js"></script>

@@ -1,13 +1,33 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   const menuLateral = document.querySelector(".menu-lateral");
-  const secoesMenu = menuLateral.querySelectorAll(".secao-menu");
+  const secoesMenu = menuLateral?.querySelectorAll(".secao-menu");
   const username = localStorage.getItem("username");
-  if (username) {
-    const saudacao = document.getElementById("saudacao");
-    if (saudacao) {
-      saudacao.textContent = `Oi, ${username}!`;
+
+  async function buscarPrimeiroNome(username) {
+    try {
+      const resposta = await fetch(`http://localhost:8000/auth/email/${encodeURIComponent(username)}`);
+      if (!resposta.ok) {
+        throw new Error(`Erro HTTP: ${resposta.status}`);
+      }
+
+      const dados = await resposta.json();
+      const primeiroNome = dados.Primeiro_nome_client;
+      console.log("Primeiro nome do cliente:", primeiroNome);
+      return primeiroNome;
+    } catch (erro) {
+      console.error("Erro ao buscar cliente:", erro);
+      return null;
     }
   }
+
+  if (username) {
+    const saudacao = document.getElementById("saudacao");
+    const primeiroNome = await buscarPrimeiroNome(username);
+    if (saudacao && primeiroNome) {
+      saudacao.textContent = `Oi, ${primeiroNome}!`;
+    }
+  }
+
   secoesMenu.forEach((secao) => {
     secao.addEventListener("click", function (evt) {
       evt.preventDefault();
@@ -43,13 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const secaoLancamentos = document.getElementById("lancamentos-secao");
   if (secaoLancamentos) {
     secaoLancamentos.style.display = "block";
-  }
-
-  function atualizarPontos(novosPontos) {
-    const elementoPontos = document.getElementById("pontos");
-    if (elementoPontos) {
-      elementoPontos.textContent = novosPontos;
-    }
   }
 
   // === SERVIÇO DE CARRINHO ===
@@ -161,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Função ao confirmar pagamento → mostra tela de confirmação
+  // Função ao confirmar pagamento
   window.finalizarPagamento = function () {
     telaPagamento.style.display = "none";
     if (telaConfirmacao) {
@@ -169,25 +182,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  // ADIÇÃO: escutar o clique no botão "Confirmar Pagamento"
+  // Botão "Confirmar Pagamento"
   const botaoConfirmarPag = document.getElementById("botao-confirma-pag");
   const totalPagar = document.getElementById("total-pagar");
-  
+
   if (botaoConfirmarPag) {
     botaoConfirmarPag.addEventListener("click", async () => {
-      // Monta o pedido a partir dos dados atuais
+      // Busca o ID do cliente
+      let idCliente = null;
+      const username = localStorage.getItem("username");
+      if (username) {
+        try {
+          const resposta = await fetch(`http://localhost:8000/auth/email/${encodeURIComponent(username)}`);
+          if (resposta.ok) {
+            const cliente = await resposta.json();
+            idCliente = cliente.Id_cliente;
+          }
+        } catch (erro) {
+          console.error("Erro ao buscar cliente:", erro);
+        }
+      }
+
+      // Monta o pedido
       const payload = {
-        Data_pedido: new Date().toISOString().slice(0, 10), // data atual yyyy-mm-dd
-        Hora_pedido: new Date().toLocaleTimeString("pt-BR", { hour12: false }), // hora atual HH:mm:ss
+        Data_pedido: new Date().toISOString().slice(0, 10),
+        Hora_pedido: new Date().toLocaleTimeString("pt-BR", { hour12: false }),
         Valor_total_pedido: parseFloat(totalPagar.textContent.replace(/[^\d.,]/g, "").replace(",", ".")) || 0,
         Forma_pagamento: document.querySelector('input[name="pagamento"]:checked')?.value || "Indefinido",
         E_delivery: true, // ou false, conforme sua lógica
         Observacao: "", // aqui você pode pegar de um campo de texto se tiver
-        Id_cliente: 1, // ajuste conforme seu sistema
+        Id_cliente: idCliente || 1, // ajuste conforme seu sistema
         Id_func: 1,    // ajuste conforme seu sistema
         itens: carrinho  // Inclui todos os itens do carrinho
       };
-  
+
       try {
         const response = await fetch("http://localhost:8000/integration/pedido/", {
           method: "POST",
@@ -197,21 +225,19 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           body: JSON.stringify(payload),
         });
-  
+
         if (!response.ok) {
           throw new Error(`Erro na requisição: ${response.statusText}`);
         }
-  
+
         const data = await response.json();
-        alert("Pedido criado com sucesso! ID: " + data);
-        
-        // Limpa o carrinho após sucesso
+        // Limpa o carrinho
         carrinho = [];
         valorTotal = 0;
         document.querySelector('.valor-total').textContent = `R$ 0.00`;
         atualizarSacolaExpandida();
         atualizarResumoPagamento();
-        
+
       } catch (error) {
         alert("Falha ao criar pedido: " + error.message);
       }
@@ -236,12 +262,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Marcar "lancamentos" como ativo
-    document
-      .querySelectorAll(".secao-menu")
-      .forEach((s) => s.classList.remove("ativo"));
-    const abaLancamentos = document.querySelector(
-      '.secao-menu[data-secao="lancamentos"]'
-    );
+    document.querySelectorAll(".secao-menu").forEach((s) => s.classList.remove("ativo"));
+    const abaLancamentos = document.querySelector('.secao-menu[data-secao="lancamentos"]');
     if (abaLancamentos) {
       abaLancamentos.classList.add("ativo");
     }
@@ -256,11 +278,9 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelector(".menu-lateral").style.display = "block";
       rodapeSacola.style.display = "flex";
 
-      // Reexibe a seção ativa (ou "lancamentos" por padrão)
+      // Reexibe a seção ativa
       const secaoAtiva = document.querySelector(".secao-menu.ativo");
-      const secaoId = secaoAtiva
-        ? secaoAtiva.getAttribute("data-secao")
-        : "lancamentos";
+      const secaoId = secaoAtiva ? secaoAtiva.getAttribute("data-secao") : "lancamentos";
       const secaoAlvo = document.getElementById(`${secaoId}-secao`);
       if (secaoAlvo) {
         secaoAlvo.style.display = "block";
@@ -269,9 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // === EXPANSÃO DA SACOLA ===
-  const botaoSacola = document.getElementById("abrirSacola"); // botão "Continuar para pagamento"
-  console.log("botaoSacola:", botaoSacola);
-
+  const botaoSacola = document.getElementById("abrirSacola");
   const sacolaExpandida = document.getElementById("sacola-expandida");
   const botaoFecharSacola = document.getElementById("fecharSacola");
 
@@ -281,9 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelector(".banner-principal").style.display = "none";
       document.querySelector(".menu-lateral").style.display = "none";
       document.querySelector(".rodape").style.display = "none";
-      document
-        .querySelectorAll(".lista-produtos")
-        .forEach((sec) => (sec.style.display = "none"));
+      document.querySelectorAll(".lista-produtos").forEach((sec) => (sec.style.display = "none"));
     });
   }
 
@@ -295,9 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelector(".rodape").style.display = "flex";
 
       const secaoAtiva = document.querySelector(".secao-menu.ativo");
-      const secaoId = secaoAtiva
-        ? secaoAtiva.getAttribute("data-secao")
-        : "lancamentos";
+      const secaoId = secaoAtiva ? secaoAtiva.getAttribute("data-secao") : "lancamentos";
       const secaoAlvo = document.getElementById(`${secaoId}-secao`);
       if (secaoAlvo) {
         secaoAlvo.style.display = "block";
@@ -305,7 +319,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Adiciona evento de clique para todos os produtos
+    // Adiciona evento de clique para todos os produtos
+    // Adiciona evento de clique para todos os produtos
   document.querySelectorAll(".produto").forEach((produto) => {
     produto.addEventListener("click", async function () {
       const nome = this.querySelector("h3").textContent;
@@ -313,31 +328,63 @@ document.addEventListener("DOMContentLoaded", function () {
         this.querySelector(".preco").textContent.replace("R$", "").replace(",",".").trim()
       );
       const imagem = this.querySelector("img").src;
-      const idItem = parseInt(this.dataset.id); // Certifique-se de adicionar data-id nos produtos
+      const idItem = parseInt(this.dataset.id);
+
+       const secaoPai = this.closest(".lista-produtos");
+       const idSecao = secaoPai?.id; // Ex: "lancamentos-secao"
+
+       let categoria = "outros";
+       if (idSecao) {
+        if (idSecao.includes("lancamentos")) categoria = "lançamento";
+        else if (idSecao.includes("acompanhamentos")) categoria = "acompanhamento";
+        else if (idSecao.includes("sobremesas")) categoria = "sobremesa";
+        else if (idSecao.includes("bebidas")) categoria = "bebida";
+      }
+
+      // Busca o ID do cliente
+      let idCliente = null;
+      const username = localStorage.getItem("username");
+      if (username) {
+        try {
+          const resposta = await fetch(`http://localhost:8000/auth/email/${encodeURIComponent(username)}`);
+          if (resposta.ok) {
+            const cliente = await resposta.json();
+            idCliente = cliente.Id_cliente;
+          }
+        } catch (erro) {
+          console.error("Erro ao buscar cliente:", erro);
+        }
+      }
 
       // Adiciona ao carrinho local
-      carrinho.push({ id_item: idItem, nome, preco, imagem });
+      carrinho.push({
+        id_item: idItem,
+        nome,
+        preco,
+        imagem,
+        categoria,
+        quantidade: 1
+      });
       valorTotal += preco;
 
-      document.querySelector(
-        ".valor-total"
-      ).textContent = `R$ ${valorTotal.toFixed(2)}`;
+      document.querySelector(".valor-total").textContent = `R$ ${valorTotal.toFixed(2)}`;
 
       atualizarSacolaExpandida();
       atualizarResumoPagamento();
-      
+
       // Sincroniza com o servidor
       await carrinhoService.adicionarItem({
-        id_item: idItem,       // Note o underline (id_item em vez de idItem)
+        id_item: idItem,
         nome: nome,
         preco: preco,
-        quantidade: 1,         // Valor padrão ou pegue de um seletor/state
-        observacoes: ""        // String vazia ou pegue de um campo de texto
-      });    
+        quantidade: 1,
+        categoria: categoria,
+        id_cliente: idCliente
+      });
     });
   });
 
-  // Atualize a função atualizarSacolaExpandida para mostrar as imagens
+  // Atualiza a sacola expandida
   function atualizarSacolaExpandida() {
     const sacolaContainer = document.getElementById("sacola-expandida");
     if (!sacolaContainer) return;
@@ -347,13 +394,14 @@ document.addEventListener("DOMContentLoaded", function () {
       sacolaContainer.querySelector(".item-sacola").remove();
     }
 
-    // Adiciona novos itens com imagens
+    // Adiciona novos itens
     carrinho.forEach((item) => {
       const itemHTML = `
         <div class="item-sacola" data-id="${item.id_item}">
           <img src="${item.imagem}" alt="${item.nome}" class="imagem-produto">
           <div class="info-produto">
             <h3>${item.nome}</h3>
+            <span class="categoria">${item.categoria}</span>
             <button class="remover-item">Remover item</button>
           </div>
           <div class="acoes">
@@ -365,6 +413,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Atualiza o resumo do pagamento
   function atualizarResumoPagamento() {
     const resumoItens = document.getElementById("resumo-itens");
     if (!resumoItens) return;
@@ -372,7 +421,7 @@ document.addEventListener("DOMContentLoaded", function () {
     resumoItens.innerHTML = "";
     carrinho.forEach((item) => {
       const li = document.createElement("li");
-      li.textContent = `1x ${item.nome} - R$ ${item.preco.toFixed(2)}`;
+      li.textContent = `1x ${item.nome} (${item.categoria}) - R$ ${item.preco.toFixed(2)}`;
       resumoItens.appendChild(li);
     });
 
@@ -387,20 +436,18 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.target.classList.contains("remover-item")) {
       const itemSacola = e.target.closest(".item-sacola");
       const idItem = parseInt(itemSacola.dataset.id);
-      
+
       // Remove do carrinho local
       const index = carrinho.findIndex(item => item.id_item === idItem);
       if (index > -1) {
         valorTotal -= carrinho[index].preco;
         carrinho.splice(index, 1);
 
-        document.querySelector(
-          ".valor-total"
-        ).textContent = `R$ ${valorTotal.toFixed(2)}`;
+        document.querySelector(".valor-total").textContent = `R$ ${valorTotal.toFixed(2)}`;
         atualizarSacolaExpandida();
         atualizarResumoPagamento();
       }
-      
+
       // Sincroniza com o servidor
       await carrinhoService.removerItem(idItem);
     }
@@ -436,10 +483,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     filtros.forEach(filtro => {
       filtro.addEventListener("click", () => {
-        // Alternar classe ativa
         filtros.forEach(f => f.classList.remove("ativo"));
         if (filtro.dataset.tag === tagSelecionada) {
-          tagSelecionada = ""; // desfaz filtro
+          tagSelecionada = "";
         } else {
           filtro.classList.add("ativo");
           tagSelecionada = filtro.dataset.tag;
@@ -449,7 +495,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // === RESPONSIVIDADE: BOTÃO QUE ABRE MENU LATERAL ===
+  // === RESPONSIVIDADE ===
   const botaoMenu = document.getElementById("botao-menu");
   const menulateral = document.querySelector(".menu-lateral");
   const opcoesMenu = document.querySelectorAll(".menu-lateral .secao-menu");
@@ -460,7 +506,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Fecha o menu lateral ao clicar em uma opção (somente em telas pequenas)
   opcoesMenu.forEach(opcao => {
     opcao.addEventListener("click", () => {
       if (window.innerWidth <= 768) {
