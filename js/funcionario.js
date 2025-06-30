@@ -53,6 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
         carregarPedidos();
       } else if (sec === "resumo") {
         carregarResumoDia();
+      } else if (sec === "ambientes") {
+        carregarAmbientes();
       } else if (sec === "sair") {
         localStorage.removeItem("token");
         setTimeout(() => window.location.href = "login.html", 1500);
@@ -155,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Observacao: document.getElementById('observacao-pedido').value || "",
         Id_cliente: comanda,
         Id_func: obterIdFuncionario(),
+        Id_pedido : Date.now() + Math.floor(Math.random() * 1000),
         itens: itens
       };
 
@@ -483,5 +486,212 @@ document.addEventListener("DOMContentLoaded", () => {
     p.style.marginTop = "10px";
     document.getElementById("registrar-secao").appendChild(p);
     return p;
+  }
+
+  // ==============================================
+  // FUNÇÕES PARA GERENCIAMENTO DE AMBIENTES
+  // ==============================================
+
+ // Função para carregar ambientes
+async function carregarAmbientes() {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await fetch('http://localhost:8000/integration/ambiente', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Erro ao carregar ambientes');
+    }
+
+    const data = await response.json();
+    renderizarAmbientes(data);
+  } catch (error) {
+    console.error('Erro ao carregar ambientes:', error);
+    document.getElementById('lista-ambientes').innerHTML =
+      '<tr><td colspan="8">Erro ao carregar ambientes: ' + error.message + '</td></tr>';
+  }
+}
+
+// Função para salvar ambiente (criação ou atualização)
+async function salvarAmbiente() {
+  const token = localStorage.getItem("token");
+  const id = document.getElementById('ambiente-id').value;
+  const franquiaId = document.getElementById('franquia-id').value;
+  const tamanho = document.getElementById('tamanho').value;
+  const quantidade = document.getElementById('quantidades').value;
+  const nivelLimpeza = document.getElementById('nivel-limpeza').value;
+  const detetizado = document.getElementById('detetizado').checked;
+  const tipoAmbiente = document.querySelector('input[name="tipo-ambiente"]:checked').value;
+
+  // Validação básica
+  if (!franquiaId || !tamanho || !quantidade || !nivelLimpeza) {
+    alert('Preencha todos os campos obrigatórios');
+    return;
+  }
+
+  const ambienteData = {
+    Id_franquia: parseInt(franquiaId),
+    Tamanho_ambiente: parseFloat(tamanho),
+    Quantidade_desse_ambiente: parseFloat(quantidade),
+    Nivel_limpeza: nivelLimpeza,
+    Detetizado: detetizado,
+    Salao: tipoAmbiente === 'salao',
+    Cozinha: tipoAmbiente === 'cozinha'
+  };
+
+  try {
+    let url = 'http://localhost:8000/integration/ambiente';
+    let method = 'POST';
+
+    if (id) {
+      url += `/${id}`;
+      method = 'PUT';
+    }
+
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(ambienteData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Erro ao salvar ambiente');
+    }
+
+    const result = await response.json();
+    alert('Ambiente salvo com sucesso!');
+    limparFormAmbiente();
+    carregarAmbientes();
+  } catch (error) {
+    console.error('Erro ao salvar ambiente:', error);
+    alert(`Falha ao salvar ambiente: ${error.message}`);
+  }
+}
+
+// Função para excluir ambiente
+async function excluirAmbiente(id) {
+  if (!confirm('Tem certeza que deseja excluir este ambiente?')) return;
+
+  const token = localStorage.getItem("token");
+  try {
+    const response = await fetch(`http://localhost:8000/integration/ambiente/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Erro ao excluir ambiente');
+    }
+
+    const result = await response.json();
+    alert('Ambiente excluído com sucesso!');
+    carregarAmbientes();
+  } catch (error) {
+    console.error('Erro ao excluir ambiente:', error);
+    alert(`Falha ao excluir ambiente: ${error.message}`);
+  }
+}
+
+// Função para renderizar a lista de ambientes
+function renderizarAmbientes(ambientes) {
+  const tbody = document.getElementById('lista-ambientes');
+  tbody.innerHTML = '';
+
+  ambientes.forEach(ambiente => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${ambiente.Id_Amb}</td>
+      <td>${ambiente.Id_franquia}</td>
+      <td>${ambiente.Tamanho_ambiente}m²</td>
+      <td>${ambiente.Quantidade_desse_ambiente}</td>
+      <td>${ambiente.Nivel_limpeza}</td>
+      <td>${ambiente.Detetizado ? 'Sim' : 'Não'}</td>
+      <td>${ambiente.Salao ? 'Salão' : ambiente.Cozinha ? 'Cozinha' : 'Outro'}</td>
+      <td>
+        <button class="btn-editar" data-id="${ambiente.Id_Amb}">Editar</button>
+        <button class="btn-excluir" data-id="${ambiente.Id_Amb}">Excluir</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  // Adiciona eventos aos botões
+  document.querySelectorAll('.btn-editar').forEach(btn => {
+    btn.addEventListener('click', () => editarAmbiente(btn.dataset.id));
+  });
+
+  document.querySelectorAll('.btn-excluir').forEach(btn => {
+    btn.addEventListener('click', () => excluirAmbiente(btn.dataset.id));
+  });
+}
+
+// Função para preencher o formulário de edição
+function editarAmbiente(id) {
+  const ambientes = JSON.parse(localStorage.getItem('ambientes') || []);
+  const ambiente = ambientes.find(a => a.Id_Amb == id);
+
+  if (ambiente) {
+    document.getElementById('ambiente-id').value = ambiente.Id_Amb;
+    document.getElementById('franquia-id').value = ambiente.Id_franquia;
+    document.getElementById('tamanho').value = ambiente.Tamanho_ambiente;
+    document.getElementById('quantidades').value = ambiente.Quantidade_desse_ambiente;
+    document.getElementById('nivel-limpeza').value = ambiente.Nivel_limpeza;
+    document.getElementById('detetizado').checked = ambiente.Detetizado;
+
+    if (ambiente.Salao) {
+      document.querySelector('input[name="tipo-ambiente"][value="salao"]').checked = true;
+    } else if (ambiente.Cozinha) {
+      document.querySelector('input[name="tipo-ambiente"][value="cozinha"]').checked = true;
+    } else {
+      document.querySelector('input[name="tipo-ambiente"][value="outro"]').checked = true;
+    }
+  }
+}
+
+// Função para limpar o formulário
+function limparFormAmbiente() {
+  document.getElementById('ambiente-id').value = '';
+  document.getElementById('franquia-id').value = '';
+  document.getElementById('tamanho').value = '';
+  document.getElementById('quantidades').value = '1';
+  document.getElementById('nivel-limpeza').value = 'Bom';
+  document.getElementById('detetizado').checked = false;
+  document.querySelector('input[name="tipo-ambiente"][value="salao"]').checked = true;
+}
+  async function confirmarExclusao(id) {
+    if (!confirm('Tem certeza que deseja excluir este ambiente?')) return;
+
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(`http://localhost:8000/integration/ambiente/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erro ao excluir ambiente');
+      }
+
+      alert('Ambiente excluído com sucesso!');
+      carregarAmbientes();
+    } catch (error) {
+      console.error('Erro ao excluir ambiente:', error);
+      alert(`Falha ao excluir ambiente: ${error.message}`);
+    }
   }
 });

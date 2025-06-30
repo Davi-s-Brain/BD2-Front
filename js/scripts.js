@@ -84,13 +84,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async adicionarItem(item) {
       try {
+        // Remover campo não existente no schema
+        const { id_cliente, ...itemClean } = item;
+
         const response = await fetch(`http://localhost:8000/carrinho/item`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
-          body: JSON.stringify(item)
+          body: JSON.stringify(itemClean)
         });
         if (!response.ok) throw new Error('Erro ao adicionar item');
         return await response.json();
@@ -102,6 +105,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async removerItem(idItem) {
       try {
+        // Usar endpoint correto para remoção
         const response = await fetch(`http://localhost:8000/carrinho/item/${idItem}`, {
           method: 'DELETE',
           headers: {
@@ -125,10 +129,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function inicializarCarrinho() {
     const carrinhoAPI = await carrinhoService.obterCarrinho();
     carrinho = carrinhoAPI.itens || [];
-    
+
     // Calcula o valor total
     valorTotal = carrinho.reduce((total, item) => total + item.preco, 0);
-    
+
     // Atualiza a interface
     document.querySelector('.valor-total').textContent = `R$ ${valorTotal.toFixed(2)}`;
     atualizarSacolaExpandida();
@@ -203,17 +207,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       }
 
-      // Monta o pedido
+      // Monta o pedido de acordo com o schema PedidoCreate
       const payload = {
         Data_pedido: new Date().toISOString().slice(0, 10),
         Hora_pedido: new Date().toLocaleTimeString("pt-BR", { hour12: false }),
-        Valor_total_pedido: parseFloat(totalPagar.textContent.replace(/[^\d.,]/g, "").replace(",", ".")) || 0,
+        Valor_total_pedido: valorTotal,
         Forma_pagamento: document.querySelector('input[name="pagamento"]:checked')?.value || "Indefinido",
-        E_delivery: true, // ou false, conforme sua lógica
-        Observacao: "", // aqui você pode pegar de um campo de texto se tiver
-        Id_cliente: idCliente || 1, // ajuste conforme seu sistema
-        Id_func: 1,    // ajuste conforme seu sistema
-        itens: carrinho  // Inclui todos os itens do carrinho
+        E_delivery: true,
+        Observacao: "",
+        Id_func: 1,
+        Id_cliente: idCliente || 1,
+        Id_pedido : Date.now() + Math.floor(Math.random() * 1000)
+        // Não incluímos itens (não faz parte do schema)
       };
 
       try {
@@ -319,8 +324,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-    // Adiciona evento de clique para todos os produtos
-    // Adiciona evento de clique para todos os produtos
+  // Adiciona evento de clique para todos os produtos
   document.querySelectorAll(".produto").forEach((produto) => {
     produto.addEventListener("click", async function () {
       const nome = this.querySelector("h3").textContent;
@@ -330,30 +334,15 @@ document.addEventListener("DOMContentLoaded", async function () {
       const imagem = this.querySelector("img").src;
       const idItem = parseInt(this.dataset.id);
 
-       const secaoPai = this.closest(".lista-produtos");
-       const idSecao = secaoPai?.id; // Ex: "lancamentos-secao"
+      const secaoPai = this.closest(".lista-produtos");
+      const idSecao = secaoPai?.id; // Ex: "lancamentos-secao"
 
-       let categoria = "outros";
-       if (idSecao) {
+      let categoria = "outros";
+      if (idSecao) {
         if (idSecao.includes("lancamentos")) categoria = "lançamento";
         else if (idSecao.includes("acompanhamentos")) categoria = "acompanhamento";
         else if (idSecao.includes("sobremesas")) categoria = "sobremesa";
         else if (idSecao.includes("bebidas")) categoria = "bebida";
-      }
-
-      // Busca o ID do cliente
-      let idCliente = null;
-      const username = localStorage.getItem("username");
-      if (username) {
-        try {
-          const resposta = await fetch(`http://localhost:8000/auth/email/${encodeURIComponent(username)}`);
-          if (resposta.ok) {
-            const cliente = await resposta.json();
-            idCliente = cliente.Id_cliente;
-          }
-        } catch (erro) {
-          console.error("Erro ao buscar cliente:", erro);
-        }
       }
 
       // Adiciona ao carrinho local
@@ -372,14 +361,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       atualizarSacolaExpandida();
       atualizarResumoPagamento();
 
-      // Sincroniza com o servidor
+      // Sincroniza com o servidor (sem id_cliente)
       await carrinhoService.adicionarItem({
         id_item: idItem,
         nome: nome,
         preco: preco,
         quantidade: 1,
-        categoria: categoria,
-        id_cliente: idCliente
+        categoria: categoria
       });
     });
   });

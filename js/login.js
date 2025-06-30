@@ -180,7 +180,7 @@
       }
 
       try {
-        const resp = await fetch(`${API_BASE}/auth/${idValue}?password=${encodeURIComponent(password)}`, {
+        const resp = await fetch(`${API_BASE}/auth/funcionarios/login?id_pass=${idValue}&password=${encodeURIComponent(password)}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -228,7 +228,7 @@
 
   // Coletar dados do formulário
   const payload = {
-    Id_cliente: 0,
+    Id_cliente: Date.now() + Math.floor(Math.random() * 1000),
     Primeiro_nome_client: document.getElementById('primeiroNome').value.trim(),
     Ultimo_nome_client: document.getElementById('ultimoNome').value.trim(),
     Data_nascimento_client: document.getElementById('dataNascimento').value,
@@ -273,7 +273,7 @@
   showProcessing('Processando seu cadastro...');
 
   try {
-    const response = await fetch(`${API_BASE}/clientes/`, {
+    const response = await fetch(`${API_BASE}/clientes/clientes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

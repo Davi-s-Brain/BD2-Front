@@ -125,9 +125,83 @@
     <div class="menu-item" data-secao="consultar">🔍 Consultar Pedidos</div>
     <div class="menu-item" data-secao="resumo">📊 Resumo do dia</div>
     <div class="menu-item" data-secao="sair">🚪 Sair</div>
+    <div class="menu-item" data-secao="ambientes">🏢 Gerenciar Ambientes</div>
   </div>
+<!-- Adicione isso no menu lateral -->
+
+
+<!-- Adicione esta seção no conteúdo -->
 
   <div class="conteudo">
+    <section id="ambientes-secao" class="secao-conteudo" style="display: none;">
+  <h2>Gerenciamento de Ambientes</h2>
+
+  <div class="form-ambiente">
+    <input type="hidden" id="ambiente-id">
+
+    <div class="form-group">
+      <label for="franquia-id">ID Franquia:</label>
+      <input type="number" id="franquia-id" required>
+    </div>
+
+    <div class="form-group">
+      <label for="tamanho">Tamanho (m²):</label>
+      <input type="number" step="0.1" id="tamanho" required>
+    </div>
+
+    <div class="form-group">
+      <label for="quantidade">Quantidade:</label>
+      <input type="number" step="0.1" id="quantidades" required>
+    </div>
+
+    <div class="form-group">
+      <label for="nivel-limpeza">Nível de Limpeza:</label>
+      <select id="nivel-limpeza" required>
+        <option value="Excelente">Excelente</option>
+        <option value="Bom">Bom</option>
+        <option value="Regular">Regular</option>
+        <option value="Ruim">Ruim</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label><input type="checkbox" id="detetizado"> Detetizado</label>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de Ambiente:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="tipo-ambiente" value="salao" checked> Salão</label>
+        <label><input type="radio" name="tipo-ambiente" value="cozinha"> Cozinha</label>
+        <label><input type="radio" name="tipo-ambiente" value="outro"> Outro</label>
+      </div>
+    </div>
+
+    <div class="form-buttons">
+      <button id="btn-salvar-ambiente">Salvar</button>
+      <button id="btn-novo-ambiente">Novo</button>
+    </div>
+  </div>
+
+  <h3>Lista de Ambientes</h3>
+  <table class="tabela-ambientes">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Franquia</th>
+        <th>Tamanho</th>
+        <th>Quantidade</th>
+        <th>Limpeza</th>
+        <th>Detetizado</th>
+        <th>Tipo</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="lista-ambientes">
+      <!-- Conteúdo dinâmico via JS -->
+    </tbody>
+  </table>
+</section>
     <section id="registrar-secao" class="secao-conteudo">
       <h2>Registrar Pedido</h2>
 
@@ -321,6 +395,7 @@
         </div>
       </div>
     </section>
+
 
     <section id="sair-secao" class="secao-conteudo" style="display: none;">
       <p>Você saiu com sucesso.</p>

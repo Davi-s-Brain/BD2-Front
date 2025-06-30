@@ -740,3 +740,99 @@ button:active {
 #bar-sobremesa { background-color: #9b59b6; }
 #bar-bebida { background-color: #f1c40f; }
 #bar-outros { background-color: #2ecc71; }
+/* Adicione ao funcionario.css */
+#ambientes-secao {
+  padding: 20px;
+}
+
+.form-ambiente {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-ambiente .form-group {
+  margin-bottom: 15px;
+}
+
+.form-ambiente label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-ambiente input[type="number"],
+.form-ambiente input[type="text"],
+.form-ambiente select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.form-buttons button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-buttons button:first-child {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.form-buttons button:last-child {
+  background-color: #2196F3;
+  color: white;
+}
+
+.tabela-ambientes {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabela-ambientes th,
+.tabela-ambientes td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabela-ambientes th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.tabela-ambientes tr:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-editar {
+  background-color: #FFC107;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btn-excluir {
+  background-color: #F44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-left: 5px;
+}
