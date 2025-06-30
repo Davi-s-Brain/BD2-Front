@@ -130,7 +130,6 @@
 <!-- Adicione isso no menu lateral -->
 
 
-<!-- Adicione esta seção no conteúdo -->
 
   <div class="conteudo">
     <section id="ambientes-secao" class="secao-conteudo" style="display: none;">
@@ -139,49 +138,8 @@
   <div class="form-ambiente">
     <input type="hidden" id="ambiente-id">
 
-    <div class="form-group">
-      <label for="franquia-id">ID Franquia:</label>
-      <input type="number" id="franquia-id" required>
-    </div>
+    <div id="loading-ambientes" style="display: none; text-align:center;">🔄 Carregando ambientes...</div>
 
-    <div class="form-group">
-      <label for="tamanho">Tamanho (m²):</label>
-      <input type="number" step="0.1" id="tamanho" required>
-    </div>
-
-    <div class="form-group">
-      <label for="quantidade">Quantidade:</label>
-      <input type="number" step="0.1" id="quantidades" required>
-    </div>
-
-    <div class="form-group">
-      <label for="nivel-limpeza">Nível de Limpeza:</label>
-      <select id="nivel-limpeza" required>
-        <option value="Excelente">Excelente</option>
-        <option value="Bom">Bom</option>
-        <option value="Regular">Regular</option>
-        <option value="Ruim">Ruim</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label><input type="checkbox" id="detetizado"> Detetizado</label>
-    </div>
-
-    <div class="form-group">
-      <label>Tipo de Ambiente:</label>
-      <div class="radio-group">
-        <label><input type="radio" name="tipo-ambiente" value="salao" checked> Salão</label>
-        <label><input type="radio" name="tipo-ambiente" value="cozinha"> Cozinha</label>
-        <label><input type="radio" name="tipo-ambiente" value="outro"> Outro</label>
-      </div>
-    </div>
-
-    <div class="form-buttons">
-      <button id="btn-salvar-ambiente">Salvar</button>
-      <button id="btn-novo-ambiente">Novo</button>
-    </div>
-  </div>
 
   <h3>Lista de Ambientes</h3>
   <table class="tabela-ambientes">
@@ -194,13 +152,13 @@
         <th>Limpeza</th>
         <th>Detetizado</th>
         <th>Tipo</th>
-        <th>Ações</th>
       </tr>
     </thead>
     <tbody id="lista-ambientes">
       <!-- Conteúdo dinâmico via JS -->
     </tbody>
   </table>
+  </div>
 </section>
     <section id="registrar-secao" class="secao-conteudo">
       <h2>Registrar Pedido</h2>
@@ -317,70 +275,6 @@
           </div>
         </div>
 
-        <div class="dashboard-card pedidos-delivery">
-          <div class="card-icon">🚚</div>
-          <div class="card-content">
-            <h3>Pedidos Delivery</h3>
-            <p id="total-delivery">0</p>
-          </div>
-        </div>
-
-        <!-- Gráfico de Categorias -->
-        <div class="dashboard-card grafico-categorias">
-          <h3>Vendas por Categoria</h3>
-          <div class="categorias-container">
-            <div class="categoria-row">
-              <div class="categoria-info">
-                <span class="categoria-nome">Lançamentos</span>
-                <span class="categoria-valor" id="value-lancamento">0</span>
-              </div>
-              <div class="categoria-bar-container">
-                <div class="categoria-bar" id="bar-lancamento" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <div class="categoria-row">
-              <div class="categoria-info">
-                <span class="categoria-nome">Acompanhamentos</span>
-                <span class="categoria-valor" id="value-acompanhamento">0</span>
-              </div>
-              <div class="categoria-bar-container">
-                <div class="categoria-bar" id="bar-acompanhamento" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <div class="categoria-row">
-              <div class="categoria-info">
-                <span class="categoria-nome">Sobremesas</span>
-                <span class="categoria-valor" id="value-sobremesa">0</span>
-              </div>
-              <div class="categoria-bar-container">
-                <div class="categoria-bar" id="bar-sobremesa" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <div class="categoria-row">
-              <div class="categoria-info">
-                <span class="categoria-nome">Bebidas</span>
-                <span class="categoria-valor" id="value-bebida">0</span>
-              </div>
-              <div class="categoria-bar-container">
-                <div class="categoria-bar" id="bar-bebida" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <div class="categoria-row">
-              <div class="categoria-info">
-                <span class="categoria-nome">Outros</span>
-                <span class="categoria-valor" id="value-outros">0</span>
-              </div>
-              <div class="categoria-bar-container">
-                <div class="categoria-bar" id="bar-outros" style="width: 0%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- Seção de Destaques -->
         <div class="dashboard-card destaques">
           <h3>Destaques do Dia</h3>
@@ -394,6 +288,10 @@
           </div>
         </div>
       </div>
+        <div class="dashboard-card grafico-vendas-diarias">
+          <h3>Vendas Diárias (Últimos 7 dias)</h3>
+          <canvas id="grafico-vendas"></canvas>
+        </div>
     </section>
 
 
@@ -403,5 +301,7 @@
   </div>
 
   <script src="../js/funcionario.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </body>
 </html>

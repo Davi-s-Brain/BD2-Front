@@ -808,6 +808,41 @@ button:active {
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
+.aviso-indisponivel {
+  color: red;
+  font-weight: bold;
+  padding: 5px;
+  background-color: #ffe6e6;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+.dashboard-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Cards normais */
+.dashboard-card {
+  flex: 1 1 280px;
+}
+
+/* Gráfico ocupa toda a linha */
+.grafico-vendas-diarias {
+  flex: 1 1 100%;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Tamanho fixo do canvas */
+#grafico-vendas {
+  width: 100% !important;
+  height: 300px !important;
+}
+
 
 .tabela-ambientes th {
   background-color: #f2f2f2;

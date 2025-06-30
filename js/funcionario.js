@@ -20,7 +20,17 @@ async function validarToken() {
 
 document.addEventListener("DOMContentLoaded", () => {
   validarToken();
+  // Formulário de ambiente
+  const formAmbiente = document.getElementById('form-ambiente');
+  if (formAmbiente) {
+    formAmbiente.addEventListener('submit', salvarAmbiente);
+  }
 
+  // Botão de novo ambiente
+  const btnNovo = document.getElementById('btn-novo');
+  if (btnNovo) {
+    btnNovo.addEventListener('click', limparFormAmbiente);
+  }
   // Carrega lista de produtos no select ao iniciar
   carregarProdutos();
 
@@ -361,337 +371,178 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function carregarResumoDia() {
-    try {
-      const token = localStorage.getItem("token");
+function formatarDataHoje() {
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+  const dia = String(hoje.getDate()).padStart(2, '0');
+  return `${ano}-${mes}-${dia}`;
+}
 
-      // 1. Carrega todos os dados em paralelo para melhor performance
-      const [resTotal, resPedidos, resCategorias] = await Promise.all([
-        fetch('http://localhost:8000/integration/pedido/total-hoje/', {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        fetch('http://localhost:8000/integration/pedido/', {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        fetch('http://localhost:8000/carrinho/contagem-categorias', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-      ]);
+function gerarUltimosDias(qtdDias = 7) {
+  const datas = [];
+  const hoje = new Date();
 
-      // 2. Processa os totais do dia
-      if (resTotal.ok) {
-        const dataTotal = await resTotal.json();
-        document.getElementById('lucro-dia').textContent =
-          dataTotal.total.toFixed(2).replace('.', ',');
-      }
+  for (let i = qtdDias - 1; i >= 0; i--) {
+    const d = new Date(hoje);
+    d.setDate(hoje.getDate() - i);
+    const ano = d.getFullYear();
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
+    datas.push(`${ano}-${mes}-${dia}`);
+  }
 
-      // 3. Processa os pedidos
-      let pedidos = [];
-      if (resPedidos.ok) {
-        pedidos = await resPedidos.json();
+  return datas;
+}
 
-        // Atualiza totais
-        document.getElementById('total-pedidos').textContent = pedidos.length;
+async function carregarResumoDia() {
+  try {
+    const token = localStorage.getItem("token");
+    const datas = gerarUltimosDias(8); // últimos 7 dias + hoje
+    const headers = { Authorization: `Bearer ${token}` };
 
-        // Calcula pedidos delivery
-        const deliveryCount = pedidos.filter(p => p.E_delivery).length;
-        document.getElementById('total-delivery').textContent = deliveryCount;
+    const promessas = datas.map(data =>
+      fetch(`http://localhost:8000/integration/pedido/resumo-balanco/?data_inicio=${data}&data_fim=${data}`, {
+        headers
+      }).then(res => res.ok ? res.json() : { total_vendas: 0 })
+    );
 
-        // Calcula ticket médio se houver pedidos
-        if (pedidos.length > 0) {
-          const totalVendas = pedidos.reduce((sum, p) => sum + p.Valor_total_pedido, 0);
-          const ticketMedio = totalVendas / pedidos.length;
-          document.getElementById('ticket-medio').textContent =
-            `R$ ${ticketMedio.toFixed(2).replace('.', ',')}`;
-        }
-      }
+    const resultados = await Promise.all(promessas);
 
-      // 4. Processa as categorias
-      if (resCategorias.ok) {
-        const categoriasData = await resCategorias.json();
-        const categoriasVendas = categoriasData.categorias || {};
+    // Atualiza os indicadores com o dia mais recente (hoje)
+    const hoje = resultados[7];
+    document.getElementById('total-pedidos').textContent = hoje.total_pedidos;
+    document.getElementById('lucro-dia').textContent = hoje.total_vendas
+      .toFixed(2).replace('.', ',');
+    document.getElementById('ticket-medio').textContent =
+      `R$ ${hoje.ticket_medio.toFixed(2).replace('.', ',')}`;
 
-        // Define todas as categorias possíveis com valores padrão 0
-        const categoriasCompletas = {
-          'lancamento': 0,
-          'acompanhamento': 0,
-          'sobremesa': 0,
-          'bebida': 0,
-          'outros': 0,
-          ...categoriasVendas
-        };
-
-        // Encontra o valor máximo para normalizar as barras
-        const maxValue = Math.max(...Object.values(categoriasCompletas));
-
-        // Encontra a categoria mais vendida
-        let topCategoria = '';
-        let topValue = 0;
-
-        // Atualiza a exibição para cada categoria
-        for (const [categoria, valor] of Object.entries(categoriasCompletas)) {
-          const elementoValor = document.getElementById(`value-${categoria}`);
-          const elementoBarra = document.getElementById(`bar-${categoria}`);
-
-          if (elementoValor && elementoBarra) {
-            elementoValor.textContent = valor;
-
-            // Calcula a largura da barra proporcional ao valor máximo
-            const largura = maxValue > 0 ? (valor / maxValue * 100) : 0;
-            elementoBarra.style.width = `${largura}%`;
-
-            // Atualiza categoria mais vendida
-            if (valor > topValue) {
-              topValue = valor;
-              topCategoria = categoria;
+    // Monta o gráfico
+    const ctx = document.getElementById("grafico-vendas").getContext("2d");
+    const grafico = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: datas.map(d => d.slice(5)), // ex: "06-30"
+        datasets: [{
+          label: "Vendas Diárias (R$)",
+          data: resultados.map(r => r.total_vendas),
+          borderColor: "#3498db",
+          backgroundColor: "rgba(52,152,219,0.1)",
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+          tooltip: { callbacks: {
+            label: ctx => `R$ ${ctx.raw.toFixed(2).replace('.', ',')}`
+          }}
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: val => `R$ ${val.toFixed(2).replace('.', ',')}`
             }
           }
         }
-
-        // Atualiza destaque da categoria mais vendida
-        if (topCategoria) {
-          const labels = {
-            'lancamento': 'Lançamentos',
-            'acompanhamento': 'Acompanhamentos',
-            'sobremesa': 'Sobremesas',
-            'bebida': 'Bebidas',
-            'outros': 'Outros'
-          };
-          document.getElementById('top-categoria').textContent = labels[topCategoria];
-        }
-      }
-
-    } catch (error) {
-      console.error("Erro ao carregar resumo do dia:", error);
-
-      // Mostra mensagem de erro no console e para o usuário
-      const errorMsg = document.createElement('div');
-      errorMsg.className = 'error-message';
-      errorMsg.textContent = 'Erro ao carregar dados. Tente recarregar a página.';
-      document.getElementById('resumo-secao').appendChild(errorMsg);
-
-      // Remove a mensagem após 5 segundos
-      setTimeout(() => {
-        if (errorMsg.parentNode) {
-          errorMsg.parentNode.removeChild(errorMsg);
-        }
-      }, 5000);
-    }
-  }
-
-  // Cria parágrafo de mensagem sob o form de pedido
-  function criarMensagem() {
-    const p = document.createElement("p");
-    p.id = "mensagem-pedido";
-    p.style.marginTop = "10px";
-    document.getElementById("registrar-secao").appendChild(p);
-    return p;
-  }
-
-  // ==============================================
-  // FUNÇÕES PARA GERENCIAMENTO DE AMBIENTES
-  // ==============================================
-
- // Função para carregar ambientes
-async function carregarAmbientes() {
-  const token = localStorage.getItem("token");
-  try {
-    const response = await fetch('http://localhost:8000/integration/ambiente', {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
       }
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || 'Erro ao carregar ambientes');
-    }
-
-    const data = await response.json();
-    renderizarAmbientes(data);
   } catch (error) {
-    console.error('Erro ao carregar ambientes:', error);
-    document.getElementById('lista-ambientes').innerHTML =
-      '<tr><td colspan="8">Erro ao carregar ambientes: ' + error.message + '</td></tr>';
+    console.error("Erro ao carregar resumo do dia:", error);
+
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'error-message';
+    errorMsg.textContent = 'Erro ao carregar dados. Tente recarregar a página.';
+    document.getElementById('resumo-secao').appendChild(errorMsg);
+
+    setTimeout(() => {
+      if (errorMsg.parentNode) {
+        errorMsg.parentNode.removeChild(errorMsg);
+      }
+    }, 5000);
   }
 }
+// ==============================================
+// FUNÇÕES PARA GERENCIAMENTO DE AMBIENTES
+// ==============================================
 
-// Função para salvar ambiente (criação ou atualização)
-async function salvarAmbiente() {
-  const token = localStorage.getItem("token");
-  const id = document.getElementById('ambiente-id').value;
-  const franquiaId = document.getElementById('franquia-id').value;
-  const tamanho = document.getElementById('tamanho').value;
-  const quantidade = document.getElementById('quantidades').value;
-  const nivelLimpeza = document.getElementById('nivel-limpeza').value;
-  const detetizado = document.getElementById('detetizado').checked;
-  const tipoAmbiente = document.querySelector('input[name="tipo-ambiente"]:checked').value;
+const API_BASE = 'http://localhost:8000';
+const ambienteSecao = document.getElementById('ambientes-secao');
+const loadingAmbientes = document.getElementById('loading-ambientes');
+const listaAmbientes = document.getElementById('lista-ambientes');
 
-  // Validação básica
-  if (!franquiaId || !tamanho || !quantidade || !nivelLimpeza) {
-    alert('Preencha todos os campos obrigatórios');
+// Suponha que você armazene o ID da franquia em algum local seguro ao logar:
+const franquiaId = 1
+
+function carregarAmbientes() {
+  if (!franquiaId) {
+    alert('ID da franquia não encontrado.');
     return;
   }
 
-  const ambienteData = {
-    Id_franquia: parseInt(franquiaId),
-    Tamanho_ambiente: parseFloat(tamanho),
-    Quantidade_desse_ambiente: parseFloat(quantidade),
-    Nivel_limpeza: nivelLimpeza,
-    Detetizado: detetizado,
-    Salao: tipoAmbiente === 'salao',
-    Cozinha: tipoAmbiente === 'cozinha'
-  };
+  loadingAmbientes.style.display = 'block';
+  listaAmbientes.innerHTML = '';
 
-  try {
-    let url = 'http://localhost:8000/integration/ambiente';
-    let method = 'POST';
-
-    if (id) {
-      url += `/${id}`;
-      method = 'PUT';
-    }
-
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(ambienteData)
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || 'Erro ao salvar ambiente');
-    }
-
-    const result = await response.json();
-    alert('Ambiente salvo com sucesso!');
-    limparFormAmbiente();
-    carregarAmbientes();
-  } catch (error) {
-    console.error('Erro ao salvar ambiente:', error);
-    alert(`Falha ao salvar ambiente: ${error.message}`);
-  }
-}
-
-// Função para excluir ambiente
-async function excluirAmbiente(id) {
-  if (!confirm('Tem certeza que deseja excluir este ambiente?')) return;
-
-  const token = localStorage.getItem("token");
-  try {
-    const response = await fetch(`http://localhost:8000/integration/ambiente/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || 'Erro ao excluir ambiente');
-    }
-
-    const result = await response.json();
-    alert('Ambiente excluído com sucesso!');
-    carregarAmbientes();
-  } catch (error) {
-    console.error('Erro ao excluir ambiente:', error);
-    alert(`Falha ao excluir ambiente: ${error.message}`);
-  }
-}
-
-// Função para renderizar a lista de ambientes
-function renderizarAmbientes(ambientes) {
-  const tbody = document.getElementById('lista-ambientes');
-  tbody.innerHTML = '';
-
-  ambientes.forEach(ambiente => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${ambiente.Id_Amb}</td>
-      <td>${ambiente.Id_franquia}</td>
-      <td>${ambiente.Tamanho_ambiente}m²</td>
-      <td>${ambiente.Quantidade_desse_ambiente}</td>
-      <td>${ambiente.Nivel_limpeza}</td>
-      <td>${ambiente.Detetizado ? 'Sim' : 'Não'}</td>
-      <td>${ambiente.Salao ? 'Salão' : ambiente.Cozinha ? 'Cozinha' : 'Outro'}</td>
-      <td>
-        <button class="btn-editar" data-id="${ambiente.Id_Amb}">Editar</button>
-        <button class="btn-excluir" data-id="${ambiente.Id_Amb}">Excluir</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
-
-  // Adiciona eventos aos botões
-  document.querySelectorAll('.btn-editar').forEach(btn => {
-    btn.addEventListener('click', () => editarAmbiente(btn.dataset.id));
-  });
-
-  document.querySelectorAll('.btn-excluir').forEach(btn => {
-    btn.addEventListener('click', () => excluirAmbiente(btn.dataset.id));
-  });
-}
-
-// Função para preencher o formulário de edição
-function editarAmbiente(id) {
-  const ambientes = JSON.parse(localStorage.getItem('ambientes') || []);
-  const ambiente = ambientes.find(a => a.Id_Amb == id);
-
-  if (ambiente) {
-    document.getElementById('ambiente-id').value = ambiente.Id_Amb;
-    document.getElementById('franquia-id').value = ambiente.Id_franquia;
-    document.getElementById('tamanho').value = ambiente.Tamanho_ambiente;
-    document.getElementById('quantidades').value = ambiente.Quantidade_desse_ambiente;
-    document.getElementById('nivel-limpeza').value = ambiente.Nivel_limpeza;
-    document.getElementById('detetizado').checked = ambiente.Detetizado;
-
-    if (ambiente.Salao) {
-      document.querySelector('input[name="tipo-ambiente"][value="salao"]').checked = true;
-    } else if (ambiente.Cozinha) {
-      document.querySelector('input[name="tipo-ambiente"][value="cozinha"]').checked = true;
-    } else {
-      document.querySelector('input[name="tipo-ambiente"][value="outro"]').checked = true;
-    }
-  }
-}
-
-// Função para limpar o formulário
-function limparFormAmbiente() {
-  document.getElementById('ambiente-id').value = '';
-  document.getElementById('franquia-id').value = '';
-  document.getElementById('tamanho').value = '';
-  document.getElementById('quantidades').value = '1';
-  document.getElementById('nivel-limpeza').value = 'Bom';
-  document.getElementById('detetizado').checked = false;
-  document.querySelector('input[name="tipo-ambiente"][value="salao"]').checked = true;
-}
-  async function confirmarExclusao(id) {
-    if (!confirm('Tem certeza que deseja excluir este ambiente?')) return;
-
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(`http://localhost:8000/integration/ambiente/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+  fetch(`${API_BASE}/ambiente/?franquia_id=${franquiaId}`)
+    .then(resp => {
+      if (!resp.ok) throw new Error('Erro na resposta da API');
+      return resp.json();
+    })
+    .then(data => {
+      data.forEach(amb => {
+        const linha = document.createElement('tr');
+        linha.innerHTML = `
+          <td>${amb.Id_Amb}</td>
+          <td>${amb.Id_franquia}</td>
+          <td>${amb.Tamanho_ambiente}</td>
+          <td>${amb.Quantidade_desse_ambiente}</td>
+          <td>${amb.Nivel_limpeza}</td>
+          <td>${amb.Detetizado ? 'Sim' : 'Não'}</td>
+          <td>${formatarTipo(amb)}</td>        `;
+        listaAmbientes.appendChild(linha);
       });
+    })
+    .catch(err => {
+      console.error('Erro ao carregar ambientes:', err);
+      alert('Erro ao carregar ambientes.');
+    })
+    .finally(() => {
+      loadingAmbientes.style.display = 'none';
+    });
+}
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Erro ao excluir ambiente');
-      }
+function formatarTipo(amb) {
+  if (amb.Salao && amb.Cozinha) return 'Salão e Cozinha';
+  if (amb.Salao) return 'Salão';
+  if (amb.Cozinha) return 'Cozinha';
+  return 'Outro';
+}
 
-      alert('Ambiente excluído com sucesso!');
+function deletarAmbiente(idAmbiente) {
+  if (!confirm('Deseja excluir este ambiente?')) return;
+
+  fetch(`${API_BASE}/ambiente/${idAmbiente}`, { method: 'DELETE' })
+    .then(resp => {
+      if (!resp.ok) throw new Error('Erro ao excluir ambiente');
       carregarAmbientes();
-    } catch (error) {
-      console.error('Erro ao excluir ambiente:', error);
-      alert(`Falha ao excluir ambiente: ${error.message}`);
-    }
-  }
+    })
+    .catch(err => {
+      console.error('Erro ao excluir ambiente:', err);
+      alert('Erro ao excluir ambiente.');
+    });
+}
+
+// Controle de menu
+document.querySelectorAll('.menu-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.secao-conteudo').forEach(sec => sec.style.display = 'none');
+    document.querySelector(`#${item.dataset.secao}-secao`).style.display = 'block';
+
+    if (item.dataset.secao === 'ambientes') carregarAmbientes();
+  });
+});
 });

@@ -84,7 +84,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async adicionarItem(item) {
       try {
-        // Remover campo não existente no schema
         const { id_cliente, ...itemClean } = item;
 
         const response = await fetch(`http://localhost:8000/carrinho/item`, {
@@ -105,7 +104,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async removerItem(idItem) {
       try {
-        // Usar endpoint correto para remoção
         const response = await fetch(`http://localhost:8000/carrinho/item/${idItem}`, {
           method: 'DELETE',
           headers: {
@@ -129,18 +127,86 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function inicializarCarrinho() {
     const carrinhoAPI = await carrinhoService.obterCarrinho();
     carrinho = carrinhoAPI.itens || [];
-
-    // Calcula o valor total
     valorTotal = carrinho.reduce((total, item) => total + item.preco, 0);
-
-    // Atualiza a interface
     document.querySelector('.valor-total').textContent = `R$ ${valorTotal.toFixed(2)}`;
     atualizarSacolaExpandida();
     atualizarResumoPagamento();
   }
 
-  // === NOVAS FUNÇÕES DE PAGAMENTO ===
+  // === VERIFICAÇÃO DE DISPONIBILIDADE ===
+  async function verificarDisponibilidadeItens() {
+    try {
+      const itensPorTipo = {
+        lanche: null,
+        bebida: null,
+        sobremesa: null,
+        acompanhamento: null
+      };
 
+      // Classifica os itens do carrinho por tipo
+      carrinho.forEach(item => {
+        if (item.categoria === 'lançamento' && !itensPorTipo.lanche) {
+          itensPorTipo.lanche = item.id_item;
+        } else if (item.categoria === 'bebida' && !itensPorTipo.bebida) {
+          itensPorTipo.bebida = item.id_item;
+        } else if (item.categoria === 'sobremesa' && !itensPorTipo.sobremesa) {
+          itensPorTipo.sobremesa = item.id_item;
+        } else if (item.categoria === 'acompanhamento' && !itensPorTipo.acompanhamento) {
+          itensPorTipo.acompanhamento = item.id_item;
+        }
+      });
+
+      const response = await fetch('http://localhost:8000/combos/verificar-disponibilidade', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          id_lanche: itensPorTipo.lanche,
+          id_bebida: itensPorTipo.bebida,
+          id_sobremesa: itensPorTipo.sobremesa,
+          id_acompanhamento: itensPorTipo.acompanhamento
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao verificar disponibilidade');
+      }
+
+      const disponibilidade = await response.json();
+      const itensIndisponiveis = disponibilidade.itens.filter(item => item.quantidade_estoque <= 0);
+
+      if (itensIndisponiveis.length > 0) {
+        marcarItensIndisponiveis(itensIndisponiveis);
+        const nomesItens = itensIndisponiveis.map(item => item.item).join(', ');
+        throw new Error(`Os seguintes itens não estão disponíveis: ${nomesItens}`);
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Erro na verificação de disponibilidade:', error);
+      throw error;
+    }
+  }
+
+  function marcarItensIndisponiveis(itensIndisponiveis) {
+    document.querySelectorAll('.item-sacola').forEach(item => {
+      const idItem = parseInt(item.dataset.id);
+      const itemCarrinho = carrinho.find(i => i.id_item === idItem);
+
+      if (itemCarrinho && itensIndisponiveis.some(i => i.item === itemCarrinho.nome)) {
+        item.style.opacity = '0.5';
+        item.style.border = '1px solid red';
+        const aviso = document.createElement('div');
+        aviso.className = 'aviso-indisponivel';
+        aviso.textContent = 'Indisponível';
+        item.appendChild(aviso);
+      }
+    });
+  }
+
+  // === PAGAMENTO ===
   const botaoPagamento = document.querySelector(".recomecar-pedido");
   const telaPagamento = document.querySelector(".tela-pagamento");
   const telaConfirmacao = document.querySelector(".tela-confirmacao");
@@ -178,50 +244,44 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   });
 
-  // Função ao confirmar pagamento
-  window.finalizarPagamento = function () {
-    telaPagamento.style.display = "none";
-    if (telaConfirmacao) {
-      telaConfirmacao.style.display = "block";
-    }
-  };
-
   // Botão "Confirmar Pagamento"
   const botaoConfirmarPag = document.getElementById("botao-confirma-pag");
   const totalPagar = document.getElementById("total-pagar");
 
   if (botaoConfirmarPag) {
     botaoConfirmarPag.addEventListener("click", async () => {
-      // Busca o ID do cliente
-      let idCliente = null;
-      const username = localStorage.getItem("username");
-      if (username) {
-        try {
-          const resposta = await fetch(`http://localhost:8000/auth/email/${encodeURIComponent(username)}`);
-          if (resposta.ok) {
-            const cliente = await resposta.json();
-            idCliente = cliente.Id_cliente;
-          }
-        } catch (erro) {
-          console.error("Erro ao buscar cliente:", erro);
-        }
-      }
-
-      // Monta o pedido de acordo com o schema PedidoCreate
-      const payload = {
-        Data_pedido: new Date().toISOString().slice(0, 10),
-        Hora_pedido: new Date().toLocaleTimeString("pt-BR", { hour12: false }),
-        Valor_total_pedido: valorTotal,
-        Forma_pagamento: document.querySelector('input[name="pagamento"]:checked')?.value || "Indefinido",
-        E_delivery: true,
-        Observacao: "",
-        Id_func: 1,
-        Id_cliente: idCliente || 1,
-        Id_pedido : Date.now() + Math.floor(Math.random() * 1000)
-        // Não incluímos itens (não faz parte do schema)
-      };
-
       try {
+        // Verifica disponibilidade antes de prosseguir
+        await verificarDisponibilidadeItens();
+
+        // Busca o ID do cliente
+        let idCliente = null;
+        const username = localStorage.getItem("username");
+        if (username) {
+          try {
+            const resposta = await fetch(`http://localhost:8000/auth/email/${encodeURIComponent(username)}`);
+            if (resposta.ok) {
+              const cliente = await resposta.json();
+              idCliente = cliente.Id_cliente;
+            }
+          } catch (erro) {
+            console.error("Erro ao buscar cliente:", erro);
+          }
+        }
+
+        // Monta o pedido
+        const payload = {
+          Data_pedido: new Date().toISOString().slice(0, 10),
+          Hora_pedido: new Date().toLocaleTimeString("pt-BR", { hour12: false }),
+          Valor_total_pedido: valorTotal,
+          Forma_pagamento: document.querySelector('input[name="pagamento"]:checked')?.value || "Indefinido",
+          E_delivery: true,
+          Observacao: "",
+          Id_func: 1,
+          Id_cliente: idCliente || 1,
+          Id_pedido: Date.now() + Math.floor(Math.random() * 1000)
+        };
+
         const response = await fetch("http://localhost:8000/integration/pedido/", {
           method: "POST",
           headers: {
@@ -236,15 +296,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         const data = await response.json();
-        // Limpa o carrinho
         carrinho = [];
         valorTotal = 0;
         document.querySelector('.valor-total').textContent = `R$ 0.00`;
         atualizarSacolaExpandida();
         atualizarResumoPagamento();
 
+        // Mostra a tela de confirmação
+        telaPagamento.style.display = "none";
+        if (telaConfirmacao) {
+          telaConfirmacao.style.display = "block";
+        }
+
       } catch (error) {
-        alert("Falha ao criar pedido: " + error.message);
+        alert(error.message);
+        console.error("Erro ao finalizar pedido:", error);
       }
     });
   }
@@ -255,7 +321,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       telaConfirmacao.style.display = "none";
     }
 
-    // Restaurar a interface inicial
     document.querySelector(".banner-principal").style.display = "block";
     document.querySelector(".menu-lateral").style.display = "block";
     rodapeSacola.style.display = "flex";
@@ -266,7 +331,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       secaoLancamentos.style.display = "block";
     }
 
-    // Marcar "lancamentos" como ativo
     document.querySelectorAll(".secao-menu").forEach((s) => s.classList.remove("ativo"));
     const abaLancamentos = document.querySelector('.secao-menu[data-secao="lancamentos"]');
     if (abaLancamentos) {
@@ -283,7 +347,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       document.querySelector(".menu-lateral").style.display = "block";
       rodapeSacola.style.display = "flex";
 
-      // Reexibe a seção ativa
       const secaoAtiva = document.querySelector(".secao-menu.ativo");
       const secaoId = secaoAtiva ? secaoAtiva.getAttribute("data-secao") : "lancamentos";
       const secaoAlvo = document.getElementById(`${secaoId}-secao`);
@@ -335,7 +398,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       const idItem = parseInt(this.dataset.id);
 
       const secaoPai = this.closest(".lista-produtos");
-      const idSecao = secaoPai?.id; // Ex: "lancamentos-secao"
+      const idSecao = secaoPai?.id;
 
       let categoria = "outros";
       if (idSecao) {
@@ -361,7 +424,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       atualizarSacolaExpandida();
       atualizarResumoPagamento();
 
-      // Sincroniza com o servidor (sem id_cliente)
+      // Sincroniza com o servidor
       await carrinhoService.adicionarItem({
         id_item: idItem,
         nome: nome,
