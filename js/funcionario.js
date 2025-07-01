@@ -20,6 +20,7 @@ async function validarToken() {
 
 document.addEventListener("DOMContentLoaded", () => {
   validarToken();
+
   // Formulário de ambiente
   const formAmbiente = document.getElementById('form-ambiente');
   if (formAmbiente) {
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnNovo) {
     btnNovo.addEventListener('click', limparFormAmbiente);
   }
+
   // Carrega lista de produtos no select ao iniciar
   carregarProdutos();
 
@@ -48,15 +50,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // Gerencia troca de abas
   menuItems.forEach(item => {
     item.addEventListener("click", () => {
-      // ativa item
+      // Ativa item do menu
       menuItems.forEach(i => i.classList.remove("ativo"));
       item.classList.add("ativo");
-      // exibe seção
+
+      // Exibe seção correspondente
       const sec = item.getAttribute("data-secao");
       secoes.forEach(s => {
         s.style.display = (s.id === `${sec}-secao`) ? "block" : "none";
       });
-      // chama ações específicas
+
+      // Chama ações específicas
       if (sec === "estoque") {
         carregarEstoque();
       } else if (sec === "consultar") {
@@ -72,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // abre aba inicial
+  // Abre aba inicial
   menuItems[0].click();
 
   // Adiciona item à lista de pedido
@@ -81,14 +85,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const nome = opc.text;
     const preco = parseFloat(opc.value);
     const qtd = parseInt(quantidadeInput.value, 10);
+
     if (isNaN(preco)) {
       alert("Selecione um produto válido");
       return;
     }
+
     if (qtd <= 0) {
       alert("Quantidade deve ser maior que zero");
       return;
     }
+
     const sub = preco * qtd;
     total += sub;
     const li = document.createElement("li");
@@ -111,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Finaliza pedido (implementação refatorada)
+  // Finaliza pedido
   document.getElementById("finalizar").addEventListener("click", finalizarPedido);
 
   async function finalizarPedido() {
@@ -119,7 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const nomeCliente = document.getElementById('nome-cliente').value.trim();
     const comanda = parseInt(document.getElementById('comanda-cliente').value, 10);
     const itensPedido = Array.from(document.querySelectorAll('#lista-pedido li'));
-    const mensagem = document.getElementById("mensagem-pedido") || criarMensagem();
 
     // Validações
     if (!nomeCliente) {
@@ -167,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Observacao: document.getElementById('observacao-pedido').value || "",
         Id_cliente: comanda,
         Id_func: obterIdFuncionario(),
-        Id_pedido : Date.now() + Math.floor(Math.random() * 1000),
+        Id_pedido: Date.now() + Math.floor(Math.random() * 1000),
         itens: itens
       };
 
@@ -198,9 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
       carregarResumoDia();
 
     } catch (error) {
-      console.error("Erro detalhado:", error);
-      mensagem.textContent = `Falha: ${error.message}`;
-      mensagem.style.color = "red";
     }
   }
 
@@ -221,34 +224,59 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Filtro de pedidos
-  document.getElementById("btn-filtrar").addEventListener("click", carregarPedidos);
+  document.getElementById("btn-filtrar").addEventListener("click", () => {
+    const dataFiltro = document.getElementById("filtro-data").value;
+    carregarPedidos(dataFiltro);
+  });
+
   document.getElementById("btn-limpar-filtro").addEventListener("click", () => {
     document.getElementById("filtro-data").value = "";
     carregarPedidos();
   });
 
-  // Carrega lista de pedidos
-  async function carregarPedidos() {
-    const token = localStorage.getItem("token");
-    const filtroData = document.getElementById("filtro-data").value;
-    let url = "http://localhost:8000/integration/pedido/";
-
-    if (filtroData) {
-      url += `?data=${filtroData}`;
+  // Função para formatar data no padrão YYYY-MM-DD
+  function formatarDataParaComparacao(dataString) {
+    // Se a data já está no formato YYYY-MM-DD, retorna como está
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dataString)) {
+      return dataString;
     }
 
+    // Converte de DD/MM/YYYY para YYYY-MM-DD
+    if (dataString.includes('/')) {
+      const [dia, mes, ano] = dataString.split('/');
+      return `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+    }
+
+    return dataString; // Retorna o original se não reconhecer o formato
+  }
+
+  // Carrega lista de pedidos
+  async function carregarPedidos(dataFiltro = null) {
+    const token = localStorage.getItem("token");
+
     try {
-      const res = await fetch(url, {
+      const response = await fetch('http://localhost:8000/integration/pedido/', {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         }
       });
 
-      if (!res.ok) throw new Error("Falha ao buscar pedidos");
+      if (!response.ok) throw new Error("Falha ao buscar pedidos");
 
-      const pedidos = await res.json();
-      const tbody = document.querySelector("#consultar-secao tbody");
+      let pedidos = await response.json();
+
+      // Aplicar filtro de data se existir
+      if (dataFiltro) {
+        const dataFiltroFormatada = formatarDataParaComparacao(dataFiltro);
+
+        pedidos = pedidos.filter(pedido => {
+          const dataPedidoFormatada = formatarDataParaComparacao(pedido.Data_pedido);
+          return dataPedidoFormatada === dataFiltroFormatada;
+        });
+      }
+
+      const tbody = document.querySelector("#consultar-secao table tbody");
       tbody.innerHTML = "";
 
       pedidos.forEach(pedido => {
@@ -371,178 +399,180 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-function formatarDataHoje() {
-  const hoje = new Date();
-  const ano = hoje.getFullYear();
-  const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-  const dia = String(hoje.getDate()).padStart(2, '0');
-  return `${ano}-${mes}-${dia}`;
-}
-
-function gerarUltimosDias(qtdDias = 7) {
-  const datas = [];
-  const hoje = new Date();
-
-  for (let i = qtdDias - 1; i >= 0; i--) {
-    const d = new Date(hoje);
-    d.setDate(hoje.getDate() - i);
-    const ano = d.getFullYear();
-    const mes = String(d.getMonth() + 1).padStart(2, '0');
-    const dia = String(d.getDate()).padStart(2, '0');
-    datas.push(`${ano}-${mes}-${dia}`);
+  function formatarDataHoje() {
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
   }
 
-  return datas;
-}
+  function gerarUltimosDias(qtdDias = 7) {
+    const datas = [];
+    const hoje = new Date();
 
-async function carregarResumoDia() {
-  try {
-    const token = localStorage.getItem("token");
-    const datas = gerarUltimosDias(8); // últimos 7 dias + hoje
-    const headers = { Authorization: `Bearer ${token}` };
+    for (let i = qtdDias - 1; i >= 0; i--) {
+      const d = new Date(hoje);
+      d.setDate(hoje.getDate() - i);
+      const ano = d.getFullYear();
+      const mes = String(d.getMonth() + 1).padStart(2, '0');
+      const dia = String(d.getDate()).padStart(2, '0');
+      datas.push(`${ano}-${mes}-${dia}`);
+    }
 
-    const promessas = datas.map(data =>
-      fetch(`http://localhost:8000/integration/pedido/resumo-balanco/?data_inicio=${data}&data_fim=${data}`, {
-        headers
-      }).then(res => res.ok ? res.json() : { total_vendas: 0 })
-    );
+    return datas;
+  }
 
-    const resultados = await Promise.all(promessas);
+  async function carregarResumoDia() {
+    try {
+      const token = localStorage.getItem("token");
+      const datas = gerarUltimosDias(8); // últimos 7 dias + hoje
+      const headers = { Authorization: `Bearer ${token}` };
 
-    // Atualiza os indicadores com o dia mais recente (hoje)
-    const hoje = resultados[7];
-    document.getElementById('total-pedidos').textContent = hoje.total_pedidos;
-    document.getElementById('lucro-dia').textContent = hoje.total_vendas
-      .toFixed(2).replace('.', ',');
-    document.getElementById('ticket-medio').textContent =
-      `R$ ${hoje.ticket_medio.toFixed(2).replace('.', ',')}`;
+      const promessas = datas.map(data =>
+        fetch(`http://localhost:8000/integration/pedido/resumo-balanco/?data_inicio=${data}&data_fim=${data}`, {
+          headers
+        }).then(res => res.ok ? res.json() : { total_vendas: 0 })
+      );
 
-    // Monta o gráfico
-    const ctx = document.getElementById("grafico-vendas").getContext("2d");
-    const grafico = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: datas.map(d => d.slice(5)), // ex: "06-30"
-        datasets: [{
-          label: "Vendas Diárias (R$)",
-          data: resultados.map(r => r.total_vendas),
-          borderColor: "#3498db",
-          backgroundColor: "rgba(52,152,219,0.1)",
-          fill: true,
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: true },
-          tooltip: { callbacks: {
-            label: ctx => `R$ ${ctx.raw.toFixed(2).replace('.', ',')}`
-          }}
+      const resultados = await Promise.all(promessas);
+
+      // Atualiza os indicadores com o dia mais recente (hoje)
+      const hoje = resultados[7];
+      document.getElementById('total-pedidos').textContent = hoje.total_pedidos;
+      document.getElementById('lucro-dia').textContent = hoje.total_vendas
+        .toFixed(2).replace('.', ',');
+      document.getElementById('ticket-medio').textContent =
+        `R$ ${hoje.ticket_medio.toFixed(2).replace('.', ',')}`;
+
+      // Monta o gráfico
+      const ctx = document.getElementById("grafico-vendas").getContext("2d");
+      const grafico = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: datas.map(d => d.slice(5)), // ex: "06-30"
+          datasets: [{
+            label: "Vendas Diárias (R$)",
+            data: resultados.map(r => r.total_vendas),
+            borderColor: "#3498db",
+            backgroundColor: "rgba(52,152,219,0.1)",
+            fill: true,
+            tension: 0.3
+          }]
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: val => `R$ ${val.toFixed(2).replace('.', ',')}`
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+            tooltip: { callbacks: {
+              label: ctx => `R$ ${ctx.raw.toFixed(2).replace('.', ',')}`
+            }}
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: val => `R$ ${val.toFixed(2).replace('.', ',')}`
+              }
             }
           }
         }
-      }
-    });
-
-  } catch (error) {
-    console.error("Erro ao carregar resumo do dia:", error);
-
-    const errorMsg = document.createElement('div');
-    errorMsg.className = 'error-message';
-    errorMsg.textContent = 'Erro ao carregar dados. Tente recarregar a página.';
-    document.getElementById('resumo-secao').appendChild(errorMsg);
-
-    setTimeout(() => {
-      if (errorMsg.parentNode) {
-        errorMsg.parentNode.removeChild(errorMsg);
-      }
-    }, 5000);
-  }
-}
-// ==============================================
-// FUNÇÕES PARA GERENCIAMENTO DE AMBIENTES
-// ==============================================
-
-const API_BASE = 'http://localhost:8000';
-const ambienteSecao = document.getElementById('ambientes-secao');
-const loadingAmbientes = document.getElementById('loading-ambientes');
-const listaAmbientes = document.getElementById('lista-ambientes');
-
-// Suponha que você armazene o ID da franquia em algum local seguro ao logar:
-const franquiaId = 1
-
-function carregarAmbientes() {
-  if (!franquiaId) {
-    alert('ID da franquia não encontrado.');
-    return;
-  }
-
-  loadingAmbientes.style.display = 'block';
-  listaAmbientes.innerHTML = '';
-
-  fetch(`${API_BASE}/ambiente/?franquia_id=${franquiaId}`)
-    .then(resp => {
-      if (!resp.ok) throw new Error('Erro na resposta da API');
-      return resp.json();
-    })
-    .then(data => {
-      data.forEach(amb => {
-        const linha = document.createElement('tr');
-        linha.innerHTML = `
-          <td>${amb.Id_Amb}</td>
-          <td>${amb.Id_franquia}</td>
-          <td>${amb.Tamanho_ambiente}</td>
-          <td>${amb.Quantidade_desse_ambiente}</td>
-          <td>${amb.Nivel_limpeza}</td>
-          <td>${amb.Detetizado ? 'Sim' : 'Não'}</td>
-          <td>${formatarTipo(amb)}</td>        `;
-        listaAmbientes.appendChild(linha);
       });
-    })
-    .catch(err => {
-      console.error('Erro ao carregar ambientes:', err);
-      alert('Erro ao carregar ambientes.');
-    })
-    .finally(() => {
-      loadingAmbientes.style.display = 'none';
+
+    } catch (error) {
+      console.error("Erro ao carregar resumo do dia:", error);
+
+      const errorMsg = document.createElement('div');
+      errorMsg.className = 'error-message';
+      errorMsg.textContent = 'Erro ao carregar dados. Tente recarregar a página.';
+      document.getElementById('resumo-secao').appendChild(errorMsg);
+
+      setTimeout(() => {
+        if (errorMsg.parentNode) {
+          errorMsg.parentNode.removeChild(errorMsg);
+        }
+      }, 5000);
+    }
+  }
+
+  // ==============================================
+  // FUNÇÕES PARA GERENCIAMENTO DE AMBIENTES
+  // ==============================================
+
+  const API_BASE = 'http://localhost:8000';
+  const ambienteSecao = document.getElementById('ambientes-secao');
+  const loadingAmbientes = document.getElementById('loading-ambientes');
+  const listaAmbientes = document.getElementById('lista-ambientes');
+
+  // Suponha que você armazene o ID da franquia em algum local seguro ao logar:
+  const franquiaId = 1;
+
+  function carregarAmbientes() {
+    if (!franquiaId) {
+      alert('ID da franquia não encontrado.');
+      return;
+    }
+
+    loadingAmbientes.style.display = 'block';
+    listaAmbientes.innerHTML = '';
+
+    fetch(`${API_BASE}/ambiente/?franquia_id=${franquiaId}`)
+      .then(resp => {
+        if (!resp.ok) throw new Error('Erro na resposta da API');
+        return resp.json();
+      })
+      .then(data => {
+        data.forEach(amb => {
+          const linha = document.createElement('tr');
+          linha.innerHTML = `
+            <td>${amb.Id_Amb}</td>
+            <td>${amb.Id_franquia}</td>
+            <td>${amb.Tamanho_ambiente}</td>
+            <td>${amb.Quantidade_desse_ambiente}</td>
+            <td>${amb.Nivel_limpeza}</td>
+            <td>${amb.Detetizado ? 'Sim' : 'Não'}</td>
+            <td>${formatarTipo(amb)}</td>
+          `;
+          listaAmbientes.appendChild(linha);
+        });
+      })
+      .catch(err => {
+        console.error('Erro ao carregar ambientes:', err);
+        alert('Erro ao carregar ambientes.');
+      })
+      .finally(() => {
+        loadingAmbientes.style.display = 'none';
+      });
+  }
+
+  function formatarTipo(amb) {
+    if (amb.Salao && amb.Cozinha) return 'Salão e Cozinha';
+    if (amb.Salao) return 'Salão';
+    if (amb.Cozinha) return 'Cozinha';
+    return 'Outro';
+  }
+
+  function deletarAmbiente(idAmbiente) {
+    if (!confirm('Deseja excluir este ambiente?')) return;
+
+    fetch(`${API_BASE}/ambiente/${idAmbiente}`, { method: 'DELETE' })
+      .then(resp => {
+        if (!resp.ok) throw new Error('Erro ao excluir ambiente');
+        carregarAmbientes();
+      })
+      .catch(err => {
+        console.error('Erro ao excluir ambiente:', err);
+        alert('Erro ao excluir ambiente.');
+      });
+  }
+
+  // Controle de menu
+  document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.secao-conteudo').forEach(sec => sec.style.display = 'none');
+      document.querySelector(`#${item.dataset.secao}-secao`).style.display = 'block';
+
+      if (item.dataset.secao === 'ambientes') carregarAmbientes();
     });
-}
-
-function formatarTipo(amb) {
-  if (amb.Salao && amb.Cozinha) return 'Salão e Cozinha';
-  if (amb.Salao) return 'Salão';
-  if (amb.Cozinha) return 'Cozinha';
-  return 'Outro';
-}
-
-function deletarAmbiente(idAmbiente) {
-  if (!confirm('Deseja excluir este ambiente?')) return;
-
-  fetch(`${API_BASE}/ambiente/${idAmbiente}`, { method: 'DELETE' })
-    .then(resp => {
-      if (!resp.ok) throw new Error('Erro ao excluir ambiente');
-      carregarAmbientes();
-    })
-    .catch(err => {
-      console.error('Erro ao excluir ambiente:', err);
-      alert('Erro ao excluir ambiente.');
-    });
-}
-
-// Controle de menu
-document.querySelectorAll('.menu-item').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('.secao-conteudo').forEach(sec => sec.style.display = 'none');
-    document.querySelector(`#${item.dataset.secao}-secao`).style.display = 'block';
-
-    if (item.dataset.secao === 'ambientes') carregarAmbientes();
   });
-});
 });
